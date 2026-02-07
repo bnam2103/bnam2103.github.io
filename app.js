@@ -782,7 +782,6 @@ async function sendTextMessage() {
   requestInFlight = true;
   setStatus("Thinking…", "thinking");
   startFillerTimer();
-  clearTimeout(fillerTimer);
   fillerPlaying = false;
   pendingMainAnswer = null;
 
