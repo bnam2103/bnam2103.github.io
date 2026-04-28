@@ -1373,7 +1373,24 @@ function scheduleBootReveal() {
 }
 
 async function pollBootStatus() {
-  const state = await checkServer();
+  let state = "offline";
+  if (typeof window.checkServer === "function") {
+    state = await window.checkServer();
+  } else {
+    try {
+      const fallbackBase =
+        (typeof window !== "undefined" && window.VERA_LOCAL_BACKEND_ORIGIN)
+          ? String(window.VERA_LOCAL_BACKEND_ORIGIN).replace(/\/$/, "")
+          : "https://vera-api.vera-api-ned.workers.dev";
+      const statusRes = await fetch(`${fallbackBase}/status`, { cache: "no-store" });
+      if (statusRes.ok) {
+        const data = await statusRes.json();
+        state = data?.state || "offline";
+      }
+    } catch {
+      state = "offline";
+    }
+  }
 
   if (state === "offline") {
     hitStarting = false;
