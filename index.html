@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <!-- Optional: override user auth backend (otherwise localhost = same origin; GitHub Pages = Worker below) -->
+  <!-- Optional: override backend origin (otherwise localhost = same origin; GitHub Pages = Worker below) -->
   <meta name="vera-local-backend-origin" content="">
   <title>VERA AI</title>
   <link rel="stylesheet" href="styles.css">
@@ -150,26 +150,26 @@
         <div class="use-case-content" id="case-interrupt">
           <h3>Interruptibility</h3>
           <p>
-            Users can interrupt VERA mid-response to correct, redirect, 
-            or add context. This creates a more fluid and natural conversational 
-            flow, similar to speaking with another person rather than a turn-based conversation.
+            Users can interrupt VERA only while VERA is actively speaking.
+            This allows quick corrections or redirection during spoken output,
+            while keeping non-speaking states stable.
           </p>
         </div>
 
         <div class="use-case-content" id="case-personalization">
           <h3>Personalization</h3>
           <p>
-            VERA uses context like habits and preferences to give more helpful responses.
-            Personal data is planned to stay local on the user’s device.
+            VERA supports profile-based personalization and context-aware behavior,
+            but this is currently disabled in the public demo build.
           </p>
         </div>
 
         <div class="use-case-content" id="case-actions">
           <h3>Actions and Queries</h3>
           <p>
-            VERA can retrieve real-time information such as news, weather,
-            and time through simple voice commands. This helps eliminates the need 
-            for manual searching and enabling faster access to information.
+            VERA supports action queries such as news, weather, time, finance,
+            and music. News and finance responses support side-panel views, while
+            music can be controlled through voice query commands.
           </p>
         </div>
       </div>
@@ -205,7 +205,7 @@
       <ul>
         <li>Pause / Unpause via voice commands or physical button</li>
         <li>Real-time time and date queries</li>
-        <li>Multi-user support via session-based history isolation</li>
+        <li>Session-based history isolation</li>
         <li>Feedback system (PC)</li>
         <li>Responsive UI for mobile and desktop</li>
         <li>Visible server health check</li>
@@ -234,7 +234,7 @@
         </li>
         <li>
           Edge-case protections:
-          feedback limits, max users, hidden tunnel name,
+          feedback limits, hidden tunnel name,
           capped history (40 messages), idle session cleanup
         </li>
         <li>
@@ -265,8 +265,8 @@
           </ul>
         </li>
         <li>
-          <strong>Persona Optimization and Personalization:</strong>
-          increased wit and dry humor, tailored to user behavior patterns via JSON-based prompt-level personalization injection 
+          <strong>Persona Optimization:</strong>
+          increased wit and dry humor, tailored prompt behavior
         </li>
       </ul>  
       <h3>Presentation</h3>
@@ -345,9 +345,9 @@
         <li><strong>Intent and action refactor:</strong> `intent_router` and system action handling were restructured for cleaner routing and more reliable execution</li>
       </ul>
 
-      <h3>Admin, User, and Query Features</h3>
+      <h3>Admin and Query Features</h3>
       <ul>
-        <li><strong>Admin and user implementation:</strong> added clearer separation for privileged and standard interaction paths</li>
+        <li><strong>Admin implementation:</strong> added clearer separation for privileged interaction paths</li>
         <li><strong>News system expansion:</strong> introduced two news modes, <strong>BBC</strong> and <strong>SERPER</strong>, with broader support for general and breaking-news requests</li>
         <li><strong>Financial information support:</strong> added quote retrieval and finance-context handling for market-related requests</li>
       </ul>
@@ -1011,7 +1011,7 @@ setTimeout(startBootSequence, 60);
   /* =========================
      TYPING ANIMATION
   ========================= */
-const HEADLINE_TEXT = "VERA, a personal AI agent";
+const HEADLINE_TEXT = "VERA, an AI agent";
 const headlineEl = document.getElementById("typed-headline");
 const heroParagraph = document.querySelector("#about-vera .hero-text");
 
@@ -1705,35 +1705,6 @@ document.addEventListener("click", () => {
   sessionStorage.setItem(seenKey, "true");
 });
 </script>
-
-<div id="vera-user-sign-in-modal" class="vera-user-sign-in-overlay" hidden>
-  <div
-    class="vera-user-sign-in-dialog"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="vera-sign-in-title"
-  >
-    <h2 id="vera-sign-in-title">Sign in</h2>
-    <label class="vera-sign-in-label">
-      Username
-      <input type="text" id="vera-sign-in-username" name="username" autocomplete="username" />
-    </label>
-    <label class="vera-sign-in-label">
-      Password
-      <input
-        type="password"
-        id="vera-sign-in-password"
-        name="password"
-        autocomplete="current-password"
-      />
-    </label>
-    <p id="vera-sign-in-error" class="vera-sign-in-error" hidden></p>
-    <div class="vera-sign-in-actions">
-      <button type="button" id="vera-sign-in-submit">Sign in</button>
-      <button type="button" id="vera-sign-in-cancel">Cancel</button>
-    </div>
-  </div>
-</div>
 
 <div id="vera-settings-modal" class="vera-settings-modal" hidden>
   <div class="vera-settings-card" role="dialog" aria-modal="true" aria-labelledby="vera-settings-title">

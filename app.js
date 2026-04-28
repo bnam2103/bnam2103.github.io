@@ -8677,12 +8677,11 @@ if (sendFeedbackBtn) {
 window.resetVoiceUiToIdle = cancelVoicePipelineAndResetState;
 
 /* =========================
-   HIDDEN USER SIGN-IN (long-press VERA logo 2s)
+  BACKEND BASE HELPERS
 ========================= */
 
 /**
- * Base URL for FastAPI user routes (sign-in, /api/user/active).
- * GitHub Pages / static hosts cannot serve POST /api — must use API_URL (Worker → tunnel → app.py).
+ * Base URL helper for backend API routes.
  * Order: explicit override → localhost uvicorn → meta → file → API_URL for all other https origins.
  */
 function localBackendBase() {
@@ -8710,7 +8709,7 @@ function authApiBase() {
   return localBackendBase();
 }
 
-/** Absolute URL for user auth; never same-origin relative /api/... on GitHub Pages. */
+/** Absolute URL helper; never same-origin relative /api/... on GitHub Pages. */
 function authApiUrl(path) {
   const p = path.startsWith("/") ? path : `/${path}`;
   let base = localBackendBase();
@@ -8729,31 +8728,13 @@ function setVeraActiveUserLabel(usernameOrNull) {
     el.setAttribute("hidden", "");
     return;
   }
-  el.textContent = `user: ${usernameOrNull}`;
+  el.textContent = String(usernameOrNull);
   el.removeAttribute("hidden");
 }
 
 async function refreshVeraActiveUserLabel() {
-  const tabUser = sessionStorage.getItem(VERA_TAB_ACTIVE_USER_KEY) || "";
-  if (!tabUser) {
-    setVeraActiveUserLabel(null);
-    try {
-      await fetch(authApiUrl("/api/user/sign-out"), { method: "POST" });
-    } catch {}
-    return;
-  }
-  try {
-    const res = await fetch(authApiUrl("/api/user/active"), { method: "GET" });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      setVeraActiveUserLabel(null);
-      return;
-    }
-    const activeName = data.username != null && data.username !== "" ? String(data.username) : tabUser;
-    setVeraActiveUserLabel(activeName || null);
-  } catch {
-    setVeraActiveUserLabel(tabUser || null);
-  }
+  // User sign-in and personalization identity badges are intentionally disabled.
+  setVeraActiveUserLabel(null);
 }
 
 function wireVeraSettingsPanel() {
@@ -8915,144 +8896,8 @@ function wireVeraSettingsPanel() {
 }
 
 function wireVeraUserSignInHoldAndModal() {
-  const holdMs = 2000;
-  /* Long-press sign-in only in VERA app (#return-home-vera), not on landing nav-home */
-  const logos = [document.getElementById("return-home-vera")].filter(Boolean);
-
-  const revealSignInButtons = () => {
-    document.getElementById("vera-user-sign-in")?.removeAttribute("hidden");
-  };
-
-  logos.forEach((el) => {
-    let timer = null;
-    let longPress = false;
-    let holding = false;
-    let rafId = null;
-    let holdStart = 0;
-
-    const tick = () => {
-      if (!holding) return;
-      const elapsed = performance.now() - holdStart;
-      const pct = Math.min(100, (elapsed / holdMs) * 100);
-      el.style.setProperty("--vera-hold-pct", `${pct}%`);
-      if (holding && elapsed < holdMs) {
-        rafId = requestAnimationFrame(tick);
-      }
-    };
-
-    const endHoldTracking = () => {
-      holding = false;
-      if (rafId != null) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-      }
-      el.style.setProperty("--vera-hold-pct", "0%");
-    };
-
-    el.addEventListener("pointerdown", () => {
-      longPress = false;
-      holding = true;
-      holdStart = performance.now();
-      timer = window.setTimeout(() => {
-        longPress = true;
-        revealSignInButtons();
-        el.style.setProperty("--vera-hold-pct", "100%");
-        holding = false;
-        if (rafId != null) {
-          cancelAnimationFrame(rafId);
-          rafId = null;
-        }
-      }, holdMs);
-      rafId = requestAnimationFrame(tick);
-    });
-
-    const cancelTimerAndFill = () => {
-      if (timer != null) {
-        clearTimeout(timer);
-        timer = null;
-      }
-      endHoldTracking();
-    };
-
-    el.addEventListener("pointerup", cancelTimerAndFill);
-    el.addEventListener("pointerleave", cancelTimerAndFill);
-    el.addEventListener("pointercancel", cancelTimerAndFill);
-    el.addEventListener(
-      "click",
-      (e) => {
-        if (longPress) {
-          e.preventDefault();
-          e.stopImmediatePropagation();
-          longPress = false;
-        }
-      },
-      true
-    );
-  });
-
-  const modal = document.getElementById("vera-user-sign-in-modal");
-  const errEl = document.getElementById("vera-sign-in-error");
-
-  const showErr = (msg) => {
-    if (!errEl) return;
-    errEl.textContent = msg || "";
-    errEl.hidden = !msg;
-  };
-
-  const openModal = () => {
-    showErr("");
-    modal?.removeAttribute("hidden");
-  };
-
-  const closeModal = () => {
-    modal?.setAttribute("hidden", "");
-    showErr("");
-  };
-
-  document.getElementById("vera-user-sign-in")?.addEventListener("click", openModal);
-  document.getElementById("vera-sign-in-cancel")?.addEventListener("click", closeModal);
-  modal?.addEventListener("click", (e) => {
-    if (e.target === modal) closeModal();
-  });
-
-  document.getElementById("vera-sign-in-submit")?.addEventListener("click", async () => {
-    const userEl = document.getElementById("vera-sign-in-username");
-    const passEl = document.getElementById("vera-sign-in-password");
-    const user = userEl?.value?.trim() ?? "";
-    const pass = passEl?.value?.trim() ?? "";
-    showErr("");
-    try {
-      const res = await fetch(authApiUrl("/api/user/sign-in"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: user, password: pass })
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        const d = data.detail;
-        if (Array.isArray(d) && d.length > 0 && d[0]?.msg) {
-          showErr(String(d[0].msg));
-          return;
-        }
-        showErr(typeof d === "string" ? d : "Wrong password or username.");
-        return;
-      }
-      const name = data.username != null && data.username !== "" ? String(data.username) : null;
-      if (name) sessionStorage.setItem(VERA_TAB_ACTIVE_USER_KEY, name);
-      setVeraActiveUserLabel(name);
-      /* Start a fresh VERA session on successful user sign-in. */
-      if (typeof window.resetVeraSessionAndUi === "function") {
-        window.resetVeraSessionAndUi();
-      }
-      await hydrateWorkChecklistFromServer(true);
-      closeModal();
-      if (passEl) passEl.value = "";
-    } catch {
-      showErr(
-        "Could not reach the auth server. If you use GitHub Pages, deploy the latest app.js (cache-busted) so sign-in uses the VERA API URL, or set window.VERA_LOCAL_BACKEND_ORIGIN."
-      );
-    }
-  });
+  // User sign-in and modal are intentionally disabled.
+  return;
 }
 
 wireVeraUserSignInHoldAndModal();
