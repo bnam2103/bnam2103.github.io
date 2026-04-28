@@ -3,15 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <!-- Optional: override user auth backend (otherwise localhost = same origin; GitHub Pages = Worker below) -->
+  <meta name="vera-local-backend-origin" content="">
   <title>VERA AI</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 </head>
 
 <body>
 <!-- =========================
      BACKGROUND VIDEO
 ========================= -->
-<!-- <video
+<video
   id="bg-video"
   autoplay
   muted
@@ -19,38 +22,26 @@
   playsinline
 >
   <source src="background.mp4" type="video/mp4">
-</video> -->
+</video>
 
-<!-- =========================
-     INTRO OVERLAY (TRAILER)
-========================= -->
-<!-- <div id="intro" class="intro">
-  <video
-    id="intro-video"
-    muted
-    playsinline
-    preload="metadata"
-    poster="vera_poster.jpg"
-  >
-    <source src="VERA_commercial_2.mp4" type="video/mp4">
-  </video>
+<div id="intro" class="intro" hidden></div>
 
-  <button id="enable-sound" class="intro-btn sound">
-    Watch the trailer
-  </button>
-
-  <button id="skip-intro" class="intro-btn skip">
-    Skip the trailer
-  </button>
-  <div class="intro-disclaimer">
-    <p>VERA is an ongoing personal research project.</p>
-    <p>The trailer highlights system concepts and interaction goals rather than a finished product.</p>
+<div id="boot-loader" class="boot-loader">
+  <div class="boot-inner">
+    <div class="boot-label">Initializing VERA...</div>
+    <div class="boot-progress">
+      <div class="boot-bar" id="boot-bar"></div>
+    </div>
+    <div class="boot-percent" id="boot-percent">0%</div>
+    <div class="boot-note">
+      First launch from idle may take 10–30 seconds while the server wakes up.
+    </div>
   </div>
-</div> -->
+</div>
 
-<!-- <audio id="bg-music" loop preload="auto">
+<audio id="bg-music" loop preload="auto">
   <source src="background-music.mp3" type="audio/mpeg">
-</audio> -->
+</audio>
 <!-- =========================
      LANDING / HOME
 ========================= -->
@@ -64,7 +55,7 @@
     </div>
 
     <div class="nav-right">
-      <!-- <button
+      <button
         class="nav-link music-toggle"
         id="music-toggle"
         aria-label="Toggle background music"
@@ -73,7 +64,7 @@
         <span class="music-indicator" aria-hidden="true">
           <i></i><i></i><i></i>
         </span>
-      </button> -->
+      </button>
       <button class="nav-link" id="nav-about-vera">About VERA</button>
       <button class="nav-link" id="nav-about-me">About Me</button>
       <button class="nav-link" id="nav-projects">My Other Projects</button>
@@ -120,22 +111,97 @@
 
     </div>
   </header>
-  <section class="vera-log scroll-reveal">
-    <div class="vera-log-inner">
-      <h1 class="patch-notes">PATCH NOTES / DEV LOGS</h1>
-      <h2>VERSION 1.0</h2>
-      <p class="vera-log-intro">
-        A usable conversational AI using speech as both input and output.
-        Turn-based interaction: user speaks → AI responds.
-        Transcriptions appear as chat bubbles in real time.
-      </p>
+  <section id="vera-use-cases" class="vera-use-cases">
+  <div class="vera-use-cases-inner">
+    
+    <h2 class="vera-section-title soft type-title" data-text="How does VERA work?"></h2>
 
-      <p class="vera-log-stack">
-        <strong>Core Stack:</strong>
-        ASR (Whisper-large) · LLM (LLaMA 3.2) · TTS (fine-tuned)
-      </p>
 
-      <h3>Features / Implementations</h3>
+    <div class="vera-use-cases-content">
+      
+      <div class="use-cases-layout">
+      <div class="use-cases-nav scroll-reveal delay-1">
+
+        <button class="use-case-btn" data-case="realtime">
+          🎙️ Real-time Conversation
+        </button>
+        <button class="use-case-btn" data-case="interrupt">
+          ⏸️ Interruptibility
+        </button>
+        <button class="use-case-btn" data-case="personalization">
+          🎨 Personalization
+        </button>
+        <button class="use-case-btn" data-case="actions">
+          ⚙️ System Actions
+        </button>
+      </div>
+
+      <div class="use-cases-panel use-cases-window scroll-reveal delay-2">
+
+        <div class="use-case-content" id="case-realtime">
+          <h3>Real-time Voice Processing</h3>
+          <p>
+            VERA lets you talk naturally and get spoken responses back in real time,
+            similar to a human conversation. In noisy environments or when a 
+            microphone isn't available, you can also type or use Push-to-Talk.
+          </p>
+        </div>
+
+        <div class="use-case-content" id="case-interrupt">
+          <h3>Interruptibility</h3>
+          <p>
+            Users can interrupt VERA mid-response to correct, redirect, 
+            or add context. This creates a more fluid and natural conversational 
+            flow, similar to speaking with another person rather than a turn-based conversation.
+          </p>
+        </div>
+
+        <div class="use-case-content" id="case-personalization">
+          <h3>Personalization</h3>
+          <p>
+            VERA uses context like habits and preferences to give more helpful responses.
+            Personal data is planned to stay local on the user’s device.
+          </p>
+        </div>
+
+        <div class="use-case-content" id="case-actions">
+          <h3>Actions and Queries</h3>
+          <p>
+            VERA can retrieve real-time information such as news, weather,
+            and time through simple voice commands. This helps eliminates the need 
+            for manual searching and enabling faster access to information.
+          </p>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+  <section class="vera-log">
+  <div class="vera-log-inner">
+
+    <!-- MAIN COLLAPSE -->
+    <details class="patch-collapse">
+      <summary class="patch-main-title">
+        PATCH NOTES / DEV LOGS
+      </summary>
+
+      <!-- VERSION 1.0 -->
+      <details class="patch-version">
+        <summary>VERSION 1.0</summary>
+        <div class="patch-content">
+        <p class="vera-log-intro">
+          A usable conversational AI using speech as both input and output.
+          Turn-based interaction: user speaks → AI responds.
+          Transcriptions appear as chat bubbles in real time.
+        </p>
+
+        <p class="vera-log-stack">
+          <strong>Core Stack:</strong>
+          ASR (Whisper-large) · LLM (LLaMA 3.2) · TTS (fine-tuned)
+        </p>
+
+        <h3>Features / Implementations</h3>
       <ul>
         <li>Pause / Unpause via voice commands or physical button</li>
         <li>Real-time time and date queries</li>
@@ -177,9 +243,12 @@
           transcriptions only logged temporarily for debugging (will be removed in future)
         </li>
       </ul>
-
+      </div>
+      </details>
       <hr />
-      <h2>VERSION 2.0</h2>
+      <details class="patch-version">
+        <summary>VERSION 2.0</summary>
+        <div class="patch-content">
       <p class="vera-log-intro">
         This version focuses on making interaction with VERA feel more natural, flexible, 
         and intentional. Building on the stable voice pipeline from Version 1.0, 
@@ -188,12 +257,11 @@
       </p>
       <h3>Features / Implementations</h3>
       <ul>
-        <li><strong>Expanded Actions</strong>: news summaries and weather checks, alongside a restructured intent classification pipeline to separate actionable queries from free-form generation</li>
+        <li><strong>Expanded Actions</strong>: current news summaries and weather checks, alongside a restructured intent classification pipeline to separate actionable queries from free-form generation</li>
         <li>
           <strong>Natural Conversation (Early Strategies; Continuous Listening):</strong>
           <ul>
             <li><strong>Interruptibility</strong> enabled via concurrent audio recording and explicit microphone state management</li>
-            <li><strong>Filler words</strong> (“let me think,” “hmm”) triggered by a front-end timing mechanism for more natural response pacing</li>
           </ul>
         </li>
         <li>
@@ -203,10 +271,10 @@
       </ul>  
       <h3>Presentation</h3>
         <ul>
-          <!-- <li>
+          <li>
             <strong>Trailer Concept:</strong>
             all-caps typography, Alan Watts narration, All Caps – MF DOOM instrumental
-          </li> -->
+          </li>
           <li>
             <strong>Main page UI:</strong>
             smoother animations, simplified layout, scroll-based explanation
@@ -224,152 +292,126 @@
           <li>
             Reduced latency by adjusting LLM parameters
           </li>  
-        </ul>       
+        </ul>
+        </div>
+      </details>
       <hr />
+      <details class="patch-version">
+        <summary>VERSION 2.5</summary>
+        <div class="patch-content">
+      <p class="vera-log-intro">
+        Version 2.5 is a refinement release mainly focused on
+        <strong>response reliability, latency reduction, and conversational correctness</strong>.
+        Rather than introducing new features, this version addresses
+        systemic weaknesses observed during extended testing.
+      </p>
 
-        <h1 class="roadmap">Vision Roadmap</h1>
+      <h3>Key Improvements</h3>
+      <ul>
+        <li>
+          <strong>Hallucination Reduction via Confidence Gating:</strong>
+          introduced a confidence-aware filter that reroutes
+          low-confidence generations, significantly reducing incorrect outputs
+          during ambiguous queries
+        </li>
+        <li>
+          <strong>Interruptibility Latency Reduction:</strong>
+          restructured frontend audio handling and interrupt detection logic to
+          reduce delay when users interject mid-response
+        </li>
+        <li>
+          <strong>Improved Response Quality:</strong>
+          upgraded the LLM backend to a higher-quality model (Qwen2.5-3B-Instruct), alllowing a
+          more coherent reasoning and improved conversational tone
+        </li>
+      </ul>
+      </div>
+      </details>
+      <hr />
+      <details class="patch-version">
+        <summary>VERSION 3.0</summary>
+        <div class="patch-content">
+      <p class="vera-log-intro">
+        Version 3.0 is a major upgrade focused on deeper conversational awareness and
+        stronger action handling.
+        This release improves multi-turn reasoning, ambiguity handling, and side-panel support.
+      </p>
 
-        <h2>VERSION 3.0</h2>
-        <h3 class="vera-subtitle">Persistent Memory & Conversational Intelligence</h3>
+      <h3>Core Intelligence Upgrades</h3>
+      <ul>
+        <li><strong>Improved instruction tuning and model routing:</strong> expanded instructions and updated LLM model usage for stronger response quality</li>
+        <li><strong>Multi-turn awareness and ambiguity handling:</strong> VERA now tracks follow-up intent more reliably and responds better when user requests are underspecified</li>
+        <li><strong>Deeper follow-up structure:</strong> follow-up requests were added and the request pipeline was reworked to support more natural continuation across turns</li>
+        <li><strong>Intent and action refactor:</strong> `intent_router` and system action handling were restructured for cleaner routing and more reliable execution</li>
+      </ul>
 
-        <p class="vera-log-intro">
-          Version 3.0 represents a shift from session-based interaction toward
-          <strong>long-term conversational continuity</strong>, while preserving
-          user control, transparency, and bounded behavior.
-          This release introduces selective memory retrieval across sessions,
-          deeper conversational control, and infrastructure improvements aimed
-          at reducing latency and improving realism.
-        </p>
+      <h3>Admin, User, and Query Features</h3>
+      <ul>
+        <li><strong>Admin and user implementation:</strong> added clearer separation for privileged and standard interaction paths</li>
+        <li><strong>News system expansion:</strong> introduced two news modes, <strong>BBC</strong> and <strong>SERPER</strong>, with broader support for general and breaking-news requests</li>
+        <li><strong>Financial information support:</strong> added quote retrieval and finance-context handling for market-related requests</li>
+      </ul>
 
-        <!-- =========================
-            MEMORY & PERSONALIZATION
-        ========================= -->
-        <h3>User Memory & Personalization <span class="vera-tag">(Retrieval-Based)</span></h3>
+      <h3>UI and Interaction Enhancements</h3>
+      <ul>
+        <li><strong>Side panel upgrade:</strong> supports images, video links, and stock-price charts for richer response presentation</li>
+        <li><strong>News split-screen view:</strong> introduced a dedicated split-screen experience for news-related results</li>
+        <li><strong>Waveform improvement:</strong> changed the visualizer to use frequency bins for more accurate motion</li>
+        <li><strong>Mute control update:</strong> added mute support as part of the voice interaction workflow</li>
+        <li><strong>General UI fixes:</strong> resolved several interface issues and smoothed interaction behavior</li>
+      </ul>
 
-        <p>
-          Rather than relying solely on static prompt injection, Version 3.0 introduces
-          <strong>retrieval-augmented memory</strong>, allowing VERA to selectively recall
-          relevant user information from past interactions only when it is useful.
-        </p>
+      <h3>Latency and Conversation Flow</h3>
+      <ul>
+        <li><strong>Faster interruption response:</strong> reduced the interruption window to 500ms for quicker turn-taking</li>
+      </ul>
+      </div>
+      </details>
+      <hr />
+      <details class="patch-version">
+        <summary>VERSION BMO</summary>
+        <div class="patch-content">
+          <p class="vera-log-intro">
+            <strong>BMO</strong> adds a dedicated character page with an <strong>SVG-driven mouth</strong> that
+            reacts while TTS plays. The face isn’t tied to parsing the words on screen; it follows the
+            <strong>audio</strong> (loudness and short-term energy) so motion feels aligned with
+            <strong>prosody</strong> (syllables and pauses), not the literal phrase.
+          </p>
 
-        <ul>
-          <li>
-            <strong>Stable identity remains static:</strong>
-            user identity, preferences, and assistant behavior rules are always present
-            and never depend on retrieval.
-          </li>
-          <li>
-            <strong>Dynamic context is distilled:</strong>
-            conversational history, goals, and evolving context are stored as compact
-            memory artifacts rather than raw transcripts.
-          </li>
-          <li>
-            <strong>Query-dependent recall:</strong>
-            memories are retrieved only when relevant to the current interaction,
-            preventing over-injection or unnecessary references to past conversations.
-          </li>
-        </ul>
+          <h3>Emotion / mouth (SVG)</h3>
+          <ul>
+            <li>
+              <strong>Three discrete states</strong> (instant cuts, no smooth morph):
+              <strong>idle</strong> (stroke smile only),
+              <strong>surprised</strong> (rounded “O” mouth),
+              <strong>happy</strong> (open mouth: cavity, teeth band, tongue).
+            </li>
+            <li>
+              <strong>While <code>#bmo-audio</code> is playing,</strong> Web Audio analysis updates
+              <code>data-bmo-tts-emotion</code> on the smile SVG so CSS can show the right layer.
+            </li>
+            <li>
+              <strong>Styling tweaks:</strong> thicker outline on filled happy/surprised shapes vs the idle smile;
+              teeth nudged up to meet the cavity “roof.”
+            </li>
+          </ul>
 
-        <p><strong>Planned implementations:</strong></p>
-        <ul>
-          <li>
-            Text-bubble selection and highlighting to explicitly mark preferences or
-            important moments for memory retention
-          </li>
-          <li>
-            Session-end summarization into compact memory entries
-            (e.g., goals, projects, behavioral preferences)
-          </li>
-          <li>
-            Retrieval of a small, relevance-filtered set of memories at response time
-          </li>
-          <li>
-            Clear separation between <em>always-on personalization</em> and
-            <em>dynamic memory recall</em>
-          </li>
-        </ul>
+          <h3>Layout</h3>
+          <ul>
+            <li>
+              <strong>Phone / narrow screens:</strong> the side <strong>chat log column is hidden</strong> so the view
+              centers on the character and input dock (messages still attach in the DOM for the app).
+            </li>
+          </ul>
 
-        <p class="vera-note">
-          This approach allows VERA to maintain continuity across sessions while
-          remaining predictable, respectful, and user-controlled.
-        </p>
+          <h3>Reference</h3>
+          <ul>
+            <li><code>bmo-emotions-test.html</code> - standalone layout check for the three mouth slots.</li>
+          </ul>
+        </div>
+      </details>
 
-        <!-- =========================
-            CONVERSATIONAL CONTROL
-        ========================= -->
-        <h3>Advanced Conversational Control</h3>
-        <ul>
-          <li>
-            Editable prompts during the “thinking” state by managing microphone state
-            and controlled prompt concatenation
-            <em>(experimental; latency trade-offs under evaluation)</em>
-          </li>
-          <li>
-            Reduced end-to-end latency through frontend/backend restructuring
-          </li>
-          <li>
-            Exploration of AI-initiated interruptions using concurrent ASR and
-            high-confidence interruption classification
-            <em>(research-heavy, safety-constrained)</em>
-          </li>
-        </ul>
-
-        <!-- =========================
-            VOICE & MODELS
-        ========================= -->
-        <h3>Voice & Model Improvements</h3>
-        <ul>
-          <li>
-            Improved TTS using <strong>Coqui-XTTSv2</strong> for more natural prosody
-            and speech pacing
-          </li>
-          <li>
-            LLM backend evaluation using lightweight models
-            (<strong>LFM2 1.2B</strong>, <strong>Gemma 3 1B</strong>) to balance
-            response quality and real-time latency
-          </li>
-        </ul>
-
-        <!-- =========================
-            AUTHENTICATION
-        ========================= -->
-        <h3>Authentication & Identity</h3>
-        <ul>
-          <li>
-            Voice-based speaker filtering using user-specific voice embeddings
-            <em>(research phase; robustness to microphone and tonal variation under investigation)</em>
-          </li>
-        </ul>
-
-        <!-- =========================
-            SYSTEM ACTIONS
-        ========================= -->
-        <h3>System-Level Actions</h3>
-        <ul>
-          <li>
-            Side-panel search and navigation for Gmail, YouTube, Spotify, TikTok,
-            and Instagram
-          </li>
-          <li>
-            Exploration of local or encrypted JSON-based account context
-            <em>(user opt-in only)</em>
-          </li>
-        </ul>
-
-        <!-- =========================
-            VISUAL PERSONALITY
-        ========================= -->
-        <h3>Visual Personality Layer</h3>
-        <ul>
-          <li>
-            Context-aware interface states with lightweight visual humor
-            (thinking, contradiction detection, uncertainty)
-          </li>
-          <li>
-            Careful synchronization between UI state and conversational context
-            to avoid timing mismatches
-          </li>
-        </ul>
+    </details>
 
     </div>
   </section>
@@ -476,7 +518,7 @@
       HERO — CREDITS
   ========================= -->
   <header class="hero" id="credits">
-  <div class="hero-split reverse scroll-reveal">
+  <div class="hero-split reverse">
 
     <!-- LEFT: CONTENT -->
     <div class="hero-left hero-text-left">
@@ -484,23 +526,11 @@
 
         <span class="credits-eyebrow">Credits</span>
 
-        <!-- <p class="credits-block">
+        <p class="credits-block">
           <strong>Music</strong><br>
           <em>Moog City</em> - C418
-        </p> -->
-<!-- 
-        <p class="credits-block">
-          <strong>Trailer</strong><br>
-          Created and edited by me.<br>
-          <a
-            href="https://www.youtube.com/watch?v=apjsbT-B-VY"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="credits-link"
-          >
-            Watch trailer again here
-          </a>
-        </p> -->
+        </p>
+
         <p class="credits-section">
           <strong>Inspiration</strong><br>
           Red Barrels - cinematic UI direction and tone.
@@ -513,112 +543,241 @@
 
 </section>
 
-<!-- =========================
-     VERA APP (ORIGINAL UI)
-========================= -->
-<section id="vera-app" hidden>
+<section id="vera-app" class="vera-app-shell" hidden></section>
 
-  <div class="layout">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-
-      <section class="sidebar-section">
-        <h2>About VERA</h2>
-        <p>
-          VERA is a conversational AI demonstrating real-time
-          speech recognition, reasoning, and voice synthesis.
-        </p>
-        <p>
-          Built to showcase an end-to-end ASR → LLM → TTS pipeline.
-        </p>
-        <p><strong>Created by Nom</strong></p>
-      </section>
-
-      <section class="sidebar-section">
-      <h2>How to Use</h2>
-      <ol>
-        <li>
-          <strong>Continuous Listening</strong><br>
-            Click <strong>the headphones 🎧</strong> to let VERA listen continuously. Click again to pause/unpause.
-        </li>
-        <li>
-          <strong>Keyboard Input</strong><br>
-          Type your message and press <em>Enter</em> to send.
-        </li>
-        <li>
-          <strong>Push-to-Talk</strong><br>
-          Press <strong>the microphone 🎙️</strong> to start speaking. Press again to send, then repeat.
-        </li>
-        <li>
-          <strong>Refresh the page</strong> to return to the main website.
-        </li>
-      </ol>
-    </section>
-
-      <section class="sidebar-section">
-        <h2>Feedback</h2>
-        <textarea
-          id="feedback-input"
-          placeholder="Your feedback..."
-          rows="3"
-        ></textarea>
-        <button id="send-feedback">Send Feedback</button>
-        <div id="feedback-status"></div>
-      </section>
-
-      <section class="sidebar-section sidebar-bottom">
-        <h2>Status</h2>
-        <div id="server-status" class="server-status offline">
-          🔴 Server Offline
-        </div>
-        <p>Working Hours: 6pm – 12am (PST)</p>
-      </section>
-
-    </aside>
-
-    <!-- CHAT -->
-    <main class="chat">
-
-      <div class="conversation" id="conversation"></div>
-
-      <div class="input-bar">
-
-        <div class="mic-status">
-          <button id="record" title="Voice input">🎧</button>
-          <span id="status" class="status idle">Idle</span>
-        </div>
-
-        <input
-          id="text-input"
-          type="text"
-          placeholder="Type a message…"
-          autocomplete="off"
-          spellcheck="false"
-        />
-
-        <button id="send-text" title="Send message">➤</button>
-        <button
-          id="ptt"
-          class="ptt-btn"
-          title="Push to talk"
-        >
-          🎙️
-        </button>
-        <span
-          id="server-status-inline"
-          class="server-status offline mobile-only"
-        >
-          🔴 Offline
-        </span>
-
+<section id="bmo-loading-screen" hidden>
+  <div class="bmo-loading-shell">
+    <div class="bmo-loading-card">
+      <div class="bmo-loading-title">
+        LOADING<span class="bmo-loading-dots" aria-hidden="true"></span>
       </div>
-
-      <audio id="audio" preload="auto"></audio>
-
-    </main>
-
+      <div class="bmo-loading-track">
+        <div class="bmo-loading-bar"></div>
+      </div>
+      <div class="boot-percent" id="bmo-loading-percent">0%</div>
+    </div>
   </div>
+</section>
+
+<section id="bmo-page" class="bmo-page" hidden>
+  <main class="bmo-shell chat-centered">
+    <div id="bmo-guide" class="vera-guide">
+      <div class="guide-item guide-vera">
+        <div class="guide-arrow arrow-left">←</div>
+        <div class="guide-text">
+          Click here to learn more about the system.
+        </div>
+      </div>
+      <div class="guide-item guide-headset">
+        <div class="guide-arrow arrow-up">↑</div>
+        <div class="guide-text">
+          <strong>Continuous Listening</strong><br>
+          Works best in quiet environments for productivity. Only works when wears headset/airpods.
+        </div>
+      </div>
+      <div class="guide-item guide-ptt">
+        <div class="guide-arrow arrow-up">↑</div>
+        <div class="guide-text">
+          <strong>Push-to-Talk</strong><br>
+          Press to record. Press again to send.
+        </div>
+      </div>
+    </div>
+
+    <div class="bmo-body-row">
+      <aside class="bmo-chat-log" aria-label="Chat log">
+        <div class="bmo-chat-log-inner">
+          <div class="bmo-chat-log-head">
+            <span class="bmo-chat-log-head-label">Session</span>
+            <span class="bmo-chat-log-head-title">Chat log</span>
+          </div>
+          <div
+            class="conversation bmo-chat-log-conversation"
+            id="bmo-conversation"
+          ></div>
+        </div>
+      </aside>
+      <div class="bmo-center-column">
+        <div class="chat-header bmo-chat-header">
+          <button id="return-home" class="nav-logo bmo-home-btn" type="button">
+            VERA
+          </button>
+        </div>
+
+        <div class="bmo-stage">
+          <div class="bmo-character-frame">
+            <div class="bmo-screen-shell">
+              <div class="bmo-screen">
+                <div class="bmo-face" aria-hidden="true">
+                  <div class="bmo-eyes">
+                    <svg
+                      class="bmo-eye"
+                      viewBox="-11 -16 22 32"
+                      width="34"
+                      height="48"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <ellipse cx="0" cy="0" rx="11" ry="16" fill="#1d2035">
+                        <animate
+                          attributeName="ry"
+                          values="16;16;0.9;16;16"
+                          dur="4s"
+                          repeatCount="indefinite"
+                          keyTimes="0;0.1;0.16;0.22;1"
+                          keySplines="0 0 1 1; 0.4 0 0.6 1; 0.4 0 0.6 1; 0 0 1 1"
+                          calcMode="spline"
+                        />
+                      </ellipse>
+                    </svg>
+                    <svg
+                      class="bmo-eye"
+                      viewBox="-11 -16 22 32"
+                      width="34"
+                      height="48"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <ellipse cx="0" cy="0" rx="11" ry="16" fill="#1d2035">
+                        <animate
+                          attributeName="ry"
+                          values="16;16;0.9;16;16"
+                          dur="4s"
+                          repeatCount="indefinite"
+                          keyTimes="0;0.1;0.16;0.22;1"
+                          keySplines="0 0 1 1; 0.4 0 0.6 1; 0.4 0 0.6 1; 0 0 1 1"
+                          calcMode="spline"
+                        />
+                      </ellipse>
+                    </svg>
+                  </div>
+                  <div class="bmo-smile-wrap">
+                <!--
+                  Idle = stroke smile below. Filled mouth (TTS only) — saved coords for later:
+                  cavity: M 20.5 21.5 C 20.5 13.8 37 11.2 64 11.2 C 91 11.2 107.5 13.8 107.5 21.5
+                    C 107.5 33.8 95.5 46.2 64 47.2 C 32.5 46.2 20.5 33.8 20.5 21.5 Z (#1a5f46)
+                  teeth: upper curve ~y11.35 at center (touches cavity roof); band to 23.4 (#f7fffb)
+                  tongue: ellipse cx=64 cy=38.8 rx=12.5 ry=6.8 (#5fbf7e)
+                -->
+                <svg
+                  class="bmo-smile"
+                  id="bmo-smile-svg"
+                  viewBox="0 0 128 56"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <g transform="translate(64 15)">
+                    <g class="bmo-mouth-inner" id="bmo-mouth-vis">
+                      <g transform="translate(-64 -15)">
+                        <g class="bmo-mouth-layer bmo-mouth-layer--happy">
+                          <path
+                            fill="#1a5f46"
+                            d="M 20.5 21.5 C 20.5 13.8 37 11.2 64 11.2 C 91 11.2 107.5 13.8 107.5 21.5 C 107.5 33.8 95.5 46.2 64 47.2 C 32.5 46.2 20.5 33.8 20.5 21.5 Z"
+                          />
+                          <path
+                            fill="#f7fffb"
+                            d="M 25.5 16.2 C 25.5 12.5 40 11.35 64 11.35 C 88 11.35 102.5 12.5 102.5 16.2 L 102.5 23.4 L 25.5 23.4 Z"
+                          />
+                          <ellipse
+                            class="bmo-mouth-tongue"
+                            cx="64"
+                            cy="38.8"
+                            rx="12.5"
+                            ry="6.8"
+                            fill="#5fbf7e"
+                          />
+                        </g>
+                        <g class="bmo-mouth-layer bmo-mouth-layer--surprised">
+                          <ellipse
+                            cx="64"
+                            cy="29"
+                            rx="14"
+                            ry="17"
+                            fill="#1a5f46"
+                          />
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                  <path
+                    class="bmo-smile-path"
+                    d="M 11 13.5 C 44 26.5 78 25.8 117 13.6"
+                    stroke="#232750"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <p class="bmo-intro-caption" id="bmo-intro-caption" aria-live="polite"></p>
+
+        <aside id="bmo-side-pane" class="side-pane" hidden></aside>
+      </div>
+    </div>
+
+    <div class="input-container">
+      <div class="startup-text" id="bmo-startup-text"></div>
+      <div class="bmo-input-dock-row">
+        <button
+          id="bmo-input-toggle"
+          class="input-toggle-btn"
+          title="Switch input mode"
+          type="button"
+        >
+          ⌨️
+        </button>
+        <div id="bmo-voice-bar" class="input-bar">
+          <div class="mic-status">
+            <button id="bmo-record" type="button" title="Voice input">🎧</button>
+            <span id="bmo-status" class="status idle">Idle</span>
+          </div>
+          <div class="wave-container">
+            <canvas id="bmo-waveform"></canvas>
+          </div>
+          <button id="bmo-ptt" class="ptt-btn" type="button">🎙️</button>
+          <span
+            id="bmo-server-status-inline"
+            class="server-status offline mobile-only"
+          >
+            🔴 Offline
+          </span>
+        </div>
+        <div id="bmo-keyboard-bar" class="input-bar hidden">
+          <input
+            id="bmo-text-input"
+            type="text"
+            placeholder="Type a message…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button id="bmo-send-text" type="button" title="Send message">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <audio id="bmo-audio" preload="auto" crossorigin="anonymous"></audio>
+    <div class="bmo-bottom-right-tools" aria-label="Quick tools">
+      <button
+        type="button"
+        id="bmo-productivity-mode"
+        class="productivity-mode-btn"
+        title="Productivity mode — music panel"
+      >
+        Music
+      </button>
+    </div>
+    <div class="bmo-bottom-left-tools" aria-label="Settings tools">
+      <button type="button" id="bmo-settings-open" class="vera-settings-fab" title="Open settings">
+        Settings
+      </button>
+    </div>
+  </main>
 </section>
 
 <!-- =========================
@@ -629,15 +788,20 @@
      DOM REFERENCES
   ========================= */
 
-  // const intro = document.getElementById("intro");
-  // const introVideo = document.getElementById("intro-video");
-  // const skipBtn = document.getElementById("skip-intro");
-  // const soundBtn = document.getElementById("enable-sound");
-  // const disclaimer = document.querySelector(".intro-disclaimer");
+  const intro = document.getElementById("intro");
+  const introVideo = document.getElementById("intro-video");
+  const skipBtn = document.getElementById("skip-intro");
+  const soundBtn = document.getElementById("enable-sound");
+  soundBtn?.addEventListener("click", unlockAudio);
+  skipBtn?.addEventListener("click", unlockAudio);
+  const disclaimer = document.querySelector(".intro-disclaimer");
 
   const home = document.getElementById("home");
+  const bmoLoadingScreen = document.getElementById("bmo-loading-screen");
+  const bmoPage = document.getElementById("bmo-page");
   const veraApp = document.getElementById("vera-app");
-  const enterBtn = document.getElementById("enter-vera");
+  const veraWorkModeBtn = document.getElementById("vera-work-mode");
+  const bmoLoadingDotsEl = document.querySelector(".bmo-loading-dots");
 
   const navHome = document.getElementById("nav-home");
   const navAboutVera = document.getElementById("nav-about-vera");
@@ -645,17 +809,75 @@
   const aboutVeraSection = document.getElementById("about-vera");
   const typedEl = document.getElementById("typed-text");
 
-  // const bgVideo = document.getElementById("bg-video");
+  const bgVideo = document.getElementById("bg-video");
 
+  const bgMusic = document.getElementById("bg-music");
   /* =========================
      GLOBAL CONFIG
   ========================= */
 
-  // const INTRO_SEEN_KEY = "vera_intro_seen_session";
+  const INTRO_SEEN_KEY = "vera_intro_seen_session";
+  /* startup-typing.wav: once per tab session (set after successful play). */
+  const STARTUP_TYPING_WAV_SESSION_KEY = "vera_startup_typing_wav_session";
+  const AUDIO_UNLOCKED_KEY = "vera_audio_unlocked_session";
 
   const MAX_SCROLL = 700;
   const BASE_BRIGHTNESS = 0.3;
   const DARK_RANGE = 0.25;
+  let audioUnlocked = sessionStorage.getItem(AUDIO_UNLOCKED_KEY) === "true";
+  let bmoLoadingDotsInterval = null;
+
+  function stopBmoIntro() {
+    bmoPage?.classList.remove("bmo-mouth-active");
+    document.getElementById("bmo-smile-svg")?.removeAttribute("data-bmo-tts-emotion");
+    const cap = document.getElementById("bmo-intro-caption");
+    if (cap) {
+      cap.textContent = "";
+    }
+  }
+
+  function startBmoLoadingDots() {
+    if (!bmoLoadingDotsEl) return;
+    const frames = ["", ".", "..", "..."];
+    let frameIndex = 0;
+
+    if (bmoLoadingDotsInterval) {
+      clearInterval(bmoLoadingDotsInterval);
+    }
+
+    bmoLoadingDotsEl.textContent = frames[0];
+    bmoLoadingDotsInterval = setInterval(() => {
+      frameIndex = (frameIndex + 1) % frames.length;
+      bmoLoadingDotsEl.textContent = frames[frameIndex];
+    }, 400);
+  }
+
+  function stopBmoLoadingDots() {
+    if (bmoLoadingDotsInterval) {
+      clearInterval(bmoLoadingDotsInterval);
+      bmoLoadingDotsInterval = null;
+    }
+    if (bmoLoadingDotsEl) {
+      bmoLoadingDotsEl.textContent = "";
+    }
+  }
+
+  async function unlockAudio() {
+    if (audioUnlocked) return true;
+
+    try {
+      bgMusic.volume = 0;
+      await bgMusic.play();
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+      bgMusic.volume = BASE_MUSIC_VOLUME;
+      audioUnlocked = true;
+      sessionStorage.setItem(AUDIO_UNLOCKED_KEY, "true");
+      return true;
+    } catch {
+      return false;
+    }
+  }
 
   /* Disable browser scroll restore */
   if ("scrollRestoration" in history) {
@@ -684,42 +906,34 @@ function triggerTitleFlash() {
    INTRO LOGIC (FINAL)
 ========================= */
 
-// function hideIntro() {
-//   // fade disclaimer too
-//   disclaimer?.classList.add("hidden");
+function hideIntro() {
+  // fade disclaimer too
+  disclaimer?.classList.add("hidden");
 
-//   intro.style.transition = "opacity 0.8s ease";
-//   intro.style.opacity = "0";
+  if (!intro) {
+    sessionStorage.setItem(INTRO_SEEN_KEY, "true");
+    startBootSequence();
+    return;
+  }
+  intro.style.transition = "opacity 0.8s ease";
+  intro.style.opacity = "0";
 
-//   setTimeout(() => {
-//     intro.remove();
-//     sessionStorage.setItem(INTRO_SEEN_KEY, "true");
-//     triggerTitleFlash();
-//   }, 800);
-// }
+  setTimeout(() => {
+    intro.remove();
+    sessionStorage.setItem(INTRO_SEEN_KEY, "true");
+    startBootSequence();
+  }, 800);
+}
 
-// soundBtn.onclick = () => {
-//   introVideo.muted = false;
-//   introVideo.play();
-//   soundBtn.remove();
-
-//   // fade disclaimer when trailer starts
-//   disclaimer?.classList.add("hidden");
-// };
-
-// skipBtn.onclick = hideIntro;
-// introVideo.onended = hideIntro;
+soundBtn?.addEventListener("click", hideIntro);
+skipBtn?.addEventListener("click", hideIntro);
 
 /* =========================
    RETURN VISITS / REFRESH
 ========================= */
 
-// if (sessionStorage.getItem(INTRO_SEEN_KEY)) {
-//   intro.remove();
-
-//   // 🔑 slight delay ensures layout + CSS are ready
-//   setTimeout(triggerTitleFlash, 60);
-// }
+intro?.remove();
+setTimeout(startBootSequence, 60);
 
   /* =========================
      NAVIGATION
@@ -733,25 +947,6 @@ function triggerTitleFlash() {
     });
   };
 
-  // Enter VERA App
-  enterBtn.onclick = () => {
-    // 🔇 Stop background music when entering app
-    // if (!bgMusic.paused) {
-    //   bgMusic.pause();
-    //   bgMusic.currentTime = 0; // optional: reset track
-    //   musicToggle.classList.remove("active");
-    //   localStorage.setItem(MUSIC_KEY, "false");
-    // }
-
-    // Switch UI
-    home.hidden = true;
-    veraApp.hidden = false;
-
-    document.body.classList.add("app-open");
-    document.body.classList.add("vera-mode");
-
-    window.scrollTo(0, 0);
-  };
 
   // Logo reload (file-safe)
   navHome.onclick = (e) => {
@@ -763,55 +958,55 @@ function triggerTitleFlash() {
      SCROLL-BASED BACKGROUND
   ========================= */
 
-  // let ticking = false;
+  let ticking = false;
 
-  // window.addEventListener("scroll", () => {
-  //   if (document.body.classList.contains("app-open")) return;
+  window.addEventListener("scroll", () => {
+    if (document.body.classList.contains("app-open")) return;
 
-  //   if (!ticking) {
-  //     requestAnimationFrame(() => {
-  //       const progress = Math.min(window.scrollY / MAX_SCROLL, 1);
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const progress = Math.min(window.scrollY / MAX_SCROLL, 1);
 
-  //       /* ----- VIDEO DARKEN ----- */
-  //       let darkT = progress;
-  //       darkT = darkT * darkT * (3 - 2 * darkT); // smoothstep
+        /* ----- VIDEO DARKEN ----- */
+        let darkT = progress;
+        darkT = darkT * darkT * (3 - 2 * darkT); // smoothstep
 
-  //       const brightness =
-  //         Math.max(BASE_BRIGHTNESS - darkT * DARK_RANGE, 0.15);
+        const brightness =
+          Math.max(BASE_BRIGHTNESS - darkT * DARK_RANGE, 0.15);
 
-  //       bgVideo.style.setProperty("--v-brightness", brightness);
+        bgVideo.style.setProperty("--v-brightness", brightness);
 
-  //       /* ----- VIDEO FADE ----- */
-  //       const videoOpacity = Math.max(1 - progress * 1.2, 0);
-  //       bgVideo.style.opacity = videoOpacity;
+        /* ----- VIDEO FADE ----- */
+        const videoOpacity = Math.max(1 - progress * 1.2, 0);
+        bgVideo.style.opacity = videoOpacity;
 
-  //       /* ----- GRADIENT MORPH ----- */
-  //       let gradT = 0;
-  //       if (progress > 0.6) {
-  //         gradT = (progress - 0.6) / 0.4;
-  //         gradT = gradT * gradT;
-  //       }
+        /* ----- GRADIENT MORPH ----- */
+        let gradT = 0;
+        if (progress > 0.6) {
+          gradT = (progress - 0.6) / 0.4;
+          gradT = gradT * gradT;
+        }
 
-  //       const start = { r: 3, g: 6, b: 10 };
-  //       const endTop = { r: 4, g: 8, b: 14 };
-  //       const endBottom = { r: 8, g: 18, b: 32 };
+        const start = { r: 3, g: 6, b: 10 };
+        const endTop = { r: 4, g: 8, b: 14 };
+        const endBottom = { r: 8, g: 18, b: 32 };
 
-  //       const lerp = (a, b) => Math.round(a + (b - a) * gradT);
+        const lerp = (a, b) => Math.round(a + (b - a) * gradT);
 
-  //       document.body.style.setProperty("--g1-r", lerp(start.r, endTop.r));
-  //       document.body.style.setProperty("--g1-g", lerp(start.g, endTop.g));
-  //       document.body.style.setProperty("--g1-b", lerp(start.b, endTop.b));
+        document.body.style.setProperty("--g1-r", lerp(start.r, endTop.r));
+        document.body.style.setProperty("--g1-g", lerp(start.g, endTop.g));
+        document.body.style.setProperty("--g1-b", lerp(start.b, endTop.b));
 
-  //       document.body.style.setProperty("--g2-r", lerp(start.r, endBottom.r));
-  //       document.body.style.setProperty("--g2-g", lerp(start.g, endBottom.g));
-  //       document.body.style.setProperty("--g2-b", lerp(start.b, endBottom.b));
+        document.body.style.setProperty("--g2-r", lerp(start.r, endBottom.r));
+        document.body.style.setProperty("--g2-g", lerp(start.g, endBottom.g));
+        document.body.style.setProperty("--g2-b", lerp(start.b, endBottom.b));
 
-  //       ticking = false;
-  //     });
+        ticking = false;
+      });
 
-  //     ticking = true;
-  //   }
-  // });
+      ticking = true;
+    }
+  });
 
   /* =========================
      TYPING ANIMATION
@@ -823,6 +1018,11 @@ const heroParagraph = document.querySelector("#about-vera .hero-text");
 let headlineIndex = 0;
 let typingStarted = false; // 🔑 THIS WAS MISSING
 const heroLabel = document.getElementById("enter-vera");
+heroLabel?.addEventListener("click", async (e) => {
+  e.preventDefault();
+  await unlockAudio();
+  startBootSequence();
+});
 
 function startTyping() {
   if (typingStarted) return;
@@ -879,73 +1079,739 @@ function startTyping() {
   const revealEls = document.querySelectorAll(".scroll-reveal");
 
   const revealObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  },
-  {
-    threshold: 0.05,              // 🔑 LOWER
-    rootMargin: "0px 0px -120px"  // 🔑 trigger earlier
-  }
-);
-
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          revealObserver.unobserve(entry.target); // reveal once
+        }
+      });
+    },
+    {
+      threshold: 0.25
+    }
+  );
 
   revealEls.forEach(el => revealObserver.observe(el));
   /* =========================
     BACKGROUND MUSIC
   ========================= */
 
-  // const bgMusic = document.getElementById("bg-music");
-  // const musicToggle = document.getElementById("music-toggle");
+  const musicToggle = document.getElementById("music-toggle");
 
-  // const BASE_MUSIC_VOLUME = 0.25;
-  // const MUSIC_KEY = "vera_music_enabled";
+  const BASE_MUSIC_VOLUME = 0.25;
+  const MUSIC_KEY = "vera_music_enabled";
 
-  // bgMusic.volume = BASE_MUSIC_VOLUME;
-  // bgMusic.loop = true;
+  function shouldPlayHomeMusic() {
+    return localStorage.getItem(MUSIC_KEY) === "true";
+  }
 
-  // /* restore preference (but DO NOT autoplay sound) */
-  // const musicEnabled = localStorage.getItem(MUSIC_KEY) === "false";
-  // if (musicEnabled) {
-  //   musicToggle.classList.add("active");
-  // }
+  function syncMusicToggleState() {
+    const isAudible =
+      !bgMusic.paused &&
+      !bgMusic.ended &&
+      bgMusic.volume > 0.001;
+    musicToggle.classList.toggle("active", isAudible);
+  }
 
-  // /* user gesture REQUIRED */
-  // musicToggle.onclick = async () => {
-  //   if (bgMusic.paused) {
-  //     try {
-  //       await bgMusic.play(); // 🔑 this unlocks audio
-  //       bgMusic.volume = BASE_MUSIC_VOLUME;
-  //       musicToggle.classList.add("active");
-  //       localStorage.setItem(MUSIC_KEY, "true");
-  //     } catch (e) {
-  //       console.warn("Music play blocked:", e);
-  //     }
-  //   } else {
-  //     bgMusic.pause();
-  //     musicToggle.classList.remove("active");
-  //     localStorage.setItem(MUSIC_KEY, "false");
-  //   }
-  // };
+  async function resumeHomeMusic() {
+    if (!shouldPlayHomeMusic()) {
+      syncMusicToggleState();
+      return false;
+    }
+
+    const unlocked = await unlockAudio();
+    if (!unlocked) {
+      syncMusicToggleState();
+      return false;
+    }
+
+    try {
+      bgMusic.volume = BASE_MUSIC_VOLUME;
+      if (bgMusic.paused) {
+        await bgMusic.play();
+      }
+      syncMusicToggleState();
+      return true;
+    } catch (err) {
+      console.warn("Home music resume blocked:", err);
+      syncMusicToggleState();
+      return false;
+    }
+  }
+
+  bgMusic.volume = BASE_MUSIC_VOLUME;
+  bgMusic.loop = true;
+  bgMusic.addEventListener("play", syncMusicToggleState);
+  bgMusic.addEventListener("pause", syncMusicToggleState);
+  bgMusic.addEventListener("volumechange", syncMusicToggleState);
+
+  /* restore preference (but DO NOT autoplay sound) */
+  syncMusicToggleState();
+
+  const unlockOnFirstGesture = async () => {
+    const unlocked = await unlockAudio();
+    if (!unlocked) return;
+    syncMusicToggleState();
+  };
+
+  window.addEventListener("pointerdown", unlockOnFirstGesture, { once: true, passive: true });
+  window.addEventListener("keydown", unlockOnFirstGesture, { once: true });
+
+  /* user gesture REQUIRED */
+  musicToggle.onclick = async () => {
+    if (bgMusic.paused) {
+      localStorage.setItem(MUSIC_KEY, "true");
+      await resumeHomeMusic();
+    } else {
+      bgMusic.pause();
+      localStorage.setItem(MUSIC_KEY, "false");
+      syncMusicToggleState();
+    }
+  };
+
+  function exitVeraWorkMode() {
+    return;
+  }
+
+  function enterVeraWorkMode() {
+    return;
+  }
+
+  window.setVeraWorkMode = function setVeraWorkMode() {
+    return false;
+  };
+
+  if (window.matchMedia("(max-width: 768px)").matches) {
+    veraWorkModeBtn?.setAttribute("hidden", "");
+    veraWorkModeBtn?.setAttribute("aria-hidden", "true");
+  }
+
+  veraWorkModeBtn?.addEventListener("click", () => {});
+
+  function openBmoPage() {
+    startBootSequence();
+  }
+
+  function closeBmoPage() {
+    stopBmoIntro();
+    if (typeof window.resetVoiceUiToIdle === "function") {
+      window.resetVoiceUiToIdle();
+    }
+    bmoPage.classList.add("fade-out");
+
+    setTimeout(() => {
+      bmoPage.hidden = true;
+      bmoPage.classList.remove("fade-in", "fade-out", "bmo-animate-in");
+
+      bmoLoadingScreen.hidden = true;
+      bmoLoadingScreen.classList.remove("fade-in", "fade-out");
+      stopBmoLoadingDots();
+
+      document.body.classList.remove("app-open", "bmo-open");
+
+      home.hidden = false;
+      home.classList.add("fade-out");
+      requestAnimationFrame(() => {
+        home.classList.remove("fade-out");
+        home.classList.add("fade-in");
+      });
+    }, 450);
+  }
+
+  document.getElementById("open-bmo-from-vera")?.addEventListener("click", openBmoPage);
   /* =========================
     MOBILE NAV LOGIC
   ========================= */
+const caseButtons = document.querySelectorAll(".use-case-btn");
+const caseContents = document.querySelectorAll(".use-case-content");
 
-window.addEventListener("load", () => {
-  document.querySelector(".title-text")?.classList.add("flash");
+caseButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const target = btn.dataset.case;
+
+    caseButtons.forEach(b => b.classList.remove("active"));
+    caseContents.forEach(c => c.classList.remove("active"));
+
+    btn.classList.add("active");
+    document.getElementById(`case-${target}`).classList.add("active");
+  });
+});
+
+const DEFAULT_CASE = "realtime";
+
+const defaultBtn = document.querySelector(
+  `.use-case-btn[data-case="${DEFAULT_CASE}"]`
+);
+const defaultPanel = document.getElementById(`case-${DEFAULT_CASE}`);
+
+if (defaultBtn && defaultPanel) {
+  defaultBtn.classList.add("active");
+  defaultPanel.classList.add("active");
+}
+
+const typeTitles = document.querySelectorAll(".type-title");
+
+function typeText(el, text, speed = 45) {
+  let i = 0;
+  el.textContent = "";
+
+  const interval = setInterval(() => {
+    el.textContent += text[i];
+    i++;
+
+    if (i >= text.length) {
+      clearInterval(interval);
+    }
+  }, speed);
+}
+
+const titleObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+
+      const el = entry.target;
+      const text = el.dataset.text;
+
+      // prevent retrigger
+      if (el.dataset.typed) return;
+      el.dataset.typed = "true";
+
+      typeText(el, text, 40);
+      titleObserver.unobserve(el);
+    });
+  },
+  { threshold: 0.6 }
+);
+
+typeTitles.forEach(el => titleObserver.observe(el));
+
+const patchCollapse = document.querySelector(".patch-collapse");
+
+patchCollapse.addEventListener("toggle", () => {
+  if (patchCollapse.open) {
+    const versions = patchCollapse.querySelectorAll(".patch-version");
+
+    versions.forEach((version, index) => {
+      version.style.transitionDelay = `${index * 120}ms`;
+    });
+
+    requestAnimationFrame(() => {
+      patchCollapse.classList.add("animate-versions");
+    });
+  } else {
+    patchCollapse.classList.remove("animate-versions");
+
+    const versions = patchCollapse.querySelectorAll(".patch-version");
+    versions.forEach(version => {
+      version.style.transitionDelay = "0ms";
+    });
+  }
+});
+document.querySelectorAll(".patch-version").forEach(details => {
+  details.addEventListener("toggle", () => {
+    if (details.open) {
+      // small delay allows browser to complete layout
+      requestAnimationFrame(() => {
+        details.classList.add("animate");
+      });
+    } else {
+      details.classList.remove("animate");
+    }
+  });
+});
+const bootLoader = document.getElementById("boot-loader");
+const bootBar = document.getElementById("boot-bar");
+const bootPercent = document.getElementById("boot-percent");
+const bmoLoadingBar = bmoLoadingScreen?.querySelector(".bmo-loading-bar");
+const bmoLoadingPercent = document.getElementById("bmo-loading-percent");
+
+let currentProgress = 0;
+let bootPollInterval = null;
+let bootRevealTimer = null;
+
+function setProgress(value) {
+  const clamped = Math.max(0, Math.min(100, Math.round(value)));
+  currentProgress = clamped;
+  if (bootBar) bootBar.style.width = clamped + "%";
+  if (bootPercent) bootPercent.textContent = clamped + "%";
+  if (bmoLoadingBar) {
+    bmoLoadingBar.style.animation = "none";
+    bmoLoadingBar.style.width = clamped + "%";
+  }
+  if (bmoLoadingPercent) bmoLoadingPercent.textContent = clamped + "%";
+}
+
+let hitStarting = false;
+let appRevealed = false;
+
+function stopBootPolling() {
+  if (bootPollInterval) {
+    clearInterval(bootPollInterval);
+    bootPollInterval = null;
+  }
+}
+
+function scheduleBootReveal() {
+  if (appRevealed || bootRevealTimer) return;
+
+  stopBootPolling();
+  bootRevealTimer = setTimeout(() => {
+    setProgress(100);
+    bootRevealTimer = setTimeout(() => {
+      revealApp();
+      bootRevealTimer = null;
+    }, 500);
+  }, 500);
+}
+
+async function pollBootStatus() {
+  const state = await checkServer();
+
+  if (state === "offline") {
+    hitStarting = false;
+    setProgress(0);
+    return;
+  }
+
+  if (state === "starting") {
+    hitStarting = true;
+    /* +15 per tick @ 600ms ≈ same climb as +5 @ 200ms */
+    setProgress(Math.min(Math.max(currentProgress, 0) + 15, 50));
+    return;
+  }
+
+  if (state === "ready" && !appRevealed) {
+    if (bootRevealTimer) return;
+    setProgress(Math.max(currentProgress, 50));
+    scheduleBootReveal();
+  }
+}
+
+async function startBootSequence() {
+  appRevealed = false;
+  stopBootPolling();
+  home.hidden = true;
+  bootLoader?.classList.remove("active");
+  bmoLoadingScreen.hidden = false;
+  bmoLoadingScreen.classList.remove("fade-out");
+  bmoLoadingScreen.classList.add("fade-in");
+  startBmoLoadingDots();
+  setProgress(0);
+  hitStarting = false;
+  if (bootRevealTimer) {
+    clearTimeout(bootRevealTimer);
+    bootRevealTimer = null;
+  }
+
+  await pollBootStatus();
+  if (!appRevealed) {
+    bootPollInterval = setInterval(pollBootStatus, 600);
+  }
+}
+
+function revealApp() {
+  if (appRevealed) return;
+  appRevealed = true;
+
+  setTimeout(() => {
+    if (typeof window.resetVoiceUiToIdle === "function") {
+      window.resetVoiceUiToIdle();
+    }
+    bootLoader?.classList.remove("active");
+    bmoLoadingScreen.classList.add("fade-out");
+    stopBmoLoadingDots();
+    bmoPage.hidden = false;
+    bmoPage.classList.remove("fade-out");
+    document.body.classList.add("app-open", "bmo-open");
+
+    requestAnimationFrame(() => {
+      bmoLoadingScreen.hidden = true;
+      bmoLoadingScreen.classList.remove("fade-in", "fade-out");
+      bmoPage.classList.add("fade-in");
+      requestAnimationFrame(() => {
+        bmoPage.classList.add("bmo-animate-in");
+        window.dispatchEvent(new Event("resize"));
+        setTimeout(() => window.dispatchEvent(new Event("resize")), 80);
+        setTimeout(() => window.dispatchEvent(new Event("resize")), 400);
+      });
+    });
+  }, 500);
+}
+
+function goHomeFromApp() {
+  home.hidden = false;
+  home.classList.add("fade-out");
+  requestAnimationFrame(() => {
+    home.classList.remove("fade-out");
+    home.classList.add("fade-in");
+  });
+  window.scrollTo({ top: 0 });
+  setTimeout(() => {
+    triggerTitleFlash();
+  }, 150);
+  syncMusicToggleState();
+}
+
+document.getElementById("return-home").onclick = async () => {
+  stopBmoIntro();
+  if (typeof window.resetVoiceUiToIdle === "function") {
+    window.resetVoiceUiToIdle();
+  }
+  bmoPage.classList.add("fade-out");
+
+  setTimeout(() => {
+    bmoPage.hidden = true;
+    bmoPage.classList.remove("fade-out", "fade-in", "bmo-animate-in");
+
+    bmoLoadingScreen.hidden = true;
+    bmoLoadingScreen.classList.remove("fade-in", "fade-out");
+    stopBmoLoadingDots();
+
+    document.body.classList.remove("bmo-open");
+    document.body.classList.remove("app-open");
+    goHomeFromApp();
+  }, 600);
+};
+
+let startupTypingOuterTimer = null;
+let startupTypingCharTimer = null;
+let startupAudioScheduleTimer = null;
+
+function clearStartupTypingTimers() {
+  if (startupTypingOuterTimer != null) {
+    clearTimeout(startupTypingOuterTimer);
+    startupTypingOuterTimer = null;
+  }
+  if (startupTypingCharTimer != null) {
+    clearTimeout(startupTypingCharTimer);
+    startupTypingCharTimer = null;
+  }
+  if (startupAudioScheduleTimer != null) {
+    clearTimeout(startupAudioScheduleTimer);
+    startupAudioScheduleTimer = null;
+  }
+}
+
+/** Stop VERA startup character loop + scheduled typing SFX; fade line if user starts listening mid-type. */
+function cancelStartupTypingForVoiceEntry() {
+  clearStartupTypingTimers();
+  const el = document.getElementById("vera-startup-text");
+  if (!el) return;
+  el.classList.remove("typing-cursor");
+  const startupAudio = document.getElementById("vera-startup-audio");
+  if (startupAudio) {
+    try {
+      startupAudio.pause();
+      startupAudio.currentTime = 0;
+    } catch (_) {}
+  }
+  el.style.transition = "opacity 0.35s ease, transform 0.35s ease";
+  el.style.opacity = "0";
+  el.style.transform = "translate(-50%, -10px)";
+}
+
+window.cancelStartupTypingForVoiceEntry = cancelStartupTypingForVoiceEntry;
+
+function typeStartup(options = {}) {
+  const bmo = document.body.classList.contains("bmo-open");
+  const el = document.getElementById(bmo ? "bmo-startup-text" : "vera-startup-text");
+  if (!el) return;
+  clearStartupTypingTimers();
+  el.style.opacity = "";
+  el.style.transform = "";
+  el.style.transition = "";
+  const guideSeenKey = bmo ? "bmo_seen_guide" : "vera_seen_guide";
+  const guideId = bmo ? "bmo-guide" : "vera-guide";
+  const text = options.text || "Hi, my name is VERA. How can I help you?";
+  el.textContent = "";
+  el.offsetHeight; // force layout flush
+  const config = {
+    typingSpeed: options.typingSpeed ?? 45,   // ms per character
+    startDelay: options.startDelay ?? 400,    // delay before typing
+    fadeIn: options.fadeIn ?? true,
+    cursor: options.cursor ?? true
+  };
+
+  let i = 0;
+  el.textContent = "";
+  /* BMO: no startup-typing.wav — VERA only. */
+  const startupAudio = bmo
+    ? null
+    : document.getElementById("vera-startup-audio");
+
+  if (startupAudio) {
+    if (sessionStorage.getItem(STARTUP_TYPING_WAV_SESSION_KEY) === "true") {
+      /* already played startup-typing.wav this session */
+    } else {
+      startupAudio.currentTime = 0;
+      startupAudio.volume = 0.6;
+
+      startupAudioScheduleTimer = setTimeout(() => {
+        startupAudioScheduleTimer = null;
+        startupAudio
+          .play()
+          .then(() => {
+            sessionStorage.setItem(STARTUP_TYPING_WAV_SESSION_KEY, "true");
+          })
+          .catch((err) => {
+            console.warn("Startup audio blocked:", err);
+          });
+      }, 800);
+    }
+  }
+  if (config.cursor) {
+    el.classList.add("typing-cursor");
+  }
+
+  if (config.fadeIn) {
+    el.style.opacity = 0;
+    el.style.transform = "translate(-50%, 6px)";
+    requestAnimationFrame(() => {
+      el.style.transition = "opacity 0.8s ease, transform 0.8s ease";
+      el.style.opacity = 1;
+      el.style.transform = "translate(-50%, 0)";
+    });
+  }
+
+  startupTypingOuterTimer = setTimeout(() => {
+    startupTypingOuterTimer = null;
+    function type() {
+      if (i < text.length) {
+        el.textContent += text.charAt(i);
+        i++;
+        startupTypingCharTimer = setTimeout(() => {
+          startupTypingCharTimer = null;
+          type();
+        }, config.typingSpeed);
+      } else {
+        startupTypingCharTimer = null;
+
+        if (config.cursor) {
+          el.classList.remove("typing-cursor");
+        }
+
+        el.style.opacity = "";
+        el.style.transform = "";
+        el.style.transition = "";
+
+        // -----------------------
+        // SHOW GUIDE AFTER TYPING
+        // -----------------------
+
+        const guide = document.getElementById(guideId);
+
+        if (guide && !sessionStorage.getItem(guideSeenKey)) {
+
+          setTimeout(() => {
+            guide.classList.remove("hidden");
+            positionGuideTargets();
+            requestAnimationFrame(() => {
+              positionGuideTargets();
+              guide.classList.add("show");
+            });
+          }, 600);
+
+          setTimeout(() => {
+            guide.classList.remove("show");
+            sessionStorage.setItem(guideSeenKey, "true");
+          }, 9000);
+        }
+
+      }
+    }
+    type();
+  }, config.startDelay);
+}
+
+function wireInputModeToggles() {
+  ["vera", "bmo"].forEach((prefix) => {
+    const toggleBtn = document.getElementById(`${prefix}-input-toggle`);
+    const voiceBar = document.getElementById(`${prefix}-voice-bar`);
+    const keyboardBar = document.getElementById(`${prefix}-keyboard-bar`);
+    if (!toggleBtn || !voiceBar || !keyboardBar) return;
+    toggleBtn.addEventListener("click", () => {
+      if (typeof window.ensureChatStartedLayout === "function") {
+        window.ensureChatStartedLayout();
+      }
+      const keyboardVisible = !keyboardBar.classList.contains("hidden");
+      const showKeyboard = !keyboardVisible;
+      voiceBar.classList.toggle("hidden", showKeyboard);
+      keyboardBar.classList.toggle("hidden", !showKeyboard);
+      toggleBtn.textContent = showKeyboard ? "🎙️" : "⌨️";
+      if (showKeyboard) {
+        document.getElementById(`${prefix}-text-input`)?.focus();
+      }
+      if (prefix === "vera" && typeof window.syncVeraFlowVoiceDockLayoutClass === "function") {
+        window.syncVeraFlowVoiceDockLayoutClass();
+      }
+    });
+  });
+}
+
+wireInputModeToggles();
+
+function positionGuideNearTarget(itemSelector, targetSelector, gap = 18) {
+  const item = document.querySelector(itemSelector);
+  const target = document.querySelector(targetSelector);
+  if (!item || !target) return;
+
+  const targetRect = target.getBoundingClientRect();
+  const itemWidth = item.offsetWidth || 220;
+  const left = Math.max(
+    16,
+    Math.min(
+      window.innerWidth - itemWidth - 16,
+      targetRect.left + targetRect.width / 2 - itemWidth / 2
+    )
+  );
+
+  item.style.left = `${left}px`;
+  item.style.top = `${targetRect.bottom + gap}px`;
+}
+
+function positionGuideTargets() {
+  if (document.body.classList.contains("bmo-open")) {
+    positionGuideNearTarget(".guide-headset", "#bmo-record");
+    positionGuideNearTarget(".guide-ptt", "#bmo-ptt");
+  } else {
+    positionGuideNearTarget(".guide-headset", "#vera-record");
+    positionGuideNearTarget(".guide-ptt", "#vera-ptt");
+  }
+}
+
+window.addEventListener("resize", () => {
+  ["vera-guide", "bmo-guide"].forEach((id) => {
+    const guide = document.getElementById(id);
+    if (guide?.classList.contains("show")) positionGuideTargets();
+  });
+});
+
+document.addEventListener("click", () => {
+  const bmo = document.body.classList.contains("bmo-open");
+  const guide = document.getElementById(bmo ? "bmo-guide" : "vera-guide");
+  const seenKey = bmo ? "bmo_seen_guide" : "vera_seen_guide";
+  if (!guide) return;
+
+  if (!guide.classList.contains("show")) return;
+
+  guide.classList.remove("show");
+
+  setTimeout(() => {
+    guide.classList.add("hidden");
+  }, 350);
+
+  sessionStorage.setItem(seenKey, "true");
 });
 </script>
 
+<div id="vera-user-sign-in-modal" class="vera-user-sign-in-overlay" hidden>
+  <div
+    class="vera-user-sign-in-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="vera-sign-in-title"
+  >
+    <h2 id="vera-sign-in-title">Sign in</h2>
+    <label class="vera-sign-in-label">
+      Username
+      <input type="text" id="vera-sign-in-username" name="username" autocomplete="username" />
+    </label>
+    <label class="vera-sign-in-label">
+      Password
+      <input
+        type="password"
+        id="vera-sign-in-password"
+        name="password"
+        autocomplete="current-password"
+      />
+    </label>
+    <p id="vera-sign-in-error" class="vera-sign-in-error" hidden></p>
+    <div class="vera-sign-in-actions">
+      <button type="button" id="vera-sign-in-submit">Sign in</button>
+      <button type="button" id="vera-sign-in-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
 
-<script src="app.js"></script>
+<div id="vera-settings-modal" class="vera-settings-modal" hidden>
+  <div class="vera-settings-card" role="dialog" aria-modal="true" aria-labelledby="vera-settings-title">
+    <div class="vera-settings-header">
+      <h2 id="vera-settings-title">Settings</h2>
+      <button type="button" id="vera-settings-close" class="vera-settings-close" aria-label="Close settings">✕</button>
+    </div>
+
+    <section class="vera-settings-section">
+      <h3>Universal</h3>
+
+      <div class="vera-settings-row">
+        <label for="vera-setting-silence" class="vera-settings-label">Silence time after ASR</label>
+        <input id="vera-setting-silence" type="range" min="0" max="2" step="1" value="1" />
+        <div class="vera-settings-range-labels"><span>1.0s</span><span>1.3s</span><span>1.6s</span></div>
+      </div>
+
+      <div class="vera-settings-row">
+        <div class="vera-settings-label">ASR mode</div>
+        <div class="vera-settings-radio-row" role="radiogroup" aria-label="ASR mode">
+          <button type="button" id="vera-setting-asr-streaming" class="vera-settings-radio" data-asr-mode="streaming" aria-pressed="true">
+            <span class="dot" aria-hidden="true"></span> ASR streaming
+          </button>
+          <button type="button" id="vera-setting-asr-single" class="vera-settings-radio" data-asr-mode="single" aria-pressed="false">
+            <span class="dot" aria-hidden="true"></span> Single ASR pipeline
+          </button>
+        </div>
+      </div>
+
+      <div class="vera-settings-row">
+        <button type="button" id="vera-setting-reset-session" class="vera-settings-danger-btn">Reset session</button>
+      </div>
+    </section>
+
+    <section class="vera-settings-section">
+      <h3>Main Streaming ASR (Experimental)</h3>
+
+      <div class="vera-settings-row">
+        <label for="vera-setting-main-partial-min" class="vera-settings-label">Min chars before showing partial</label>
+        <input id="vera-setting-main-partial-min" type="range" min="0" max="4" step="1" value="2" />
+        <div class="vera-settings-range-labels"><span>5</span><span>8</span><span>10</span><span>12</span><span>15</span></div>
+      </div>
+    </section>
+
+    <section class="vera-settings-section">
+      <h3>Work Mode</h3>
+      <div class="vera-settings-row vera-settings-toggle-row">
+        <span class="vera-settings-label">Mute VERA in work mode</span>
+        <button type="button" id="vera-setting-workmode-mute" class="vera-settings-toggle" aria-pressed="false" title="Mute VERA in work mode only">
+          <span class="knob"></span>
+        </button>
+      </div>
+    </section>
+    <div class="vera-settings-actions">
+      <button type="button" id="vera-settings-save" class="vera-settings-save-btn">Save settings</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  if (typeof window === "undefined") return;
+  try {
+    if (window.VERA_LOCAL_BACKEND_ORIGIN) return;
+    var m = document.querySelector('meta[name="vera-local-backend-origin"]');
+    if (m && String(m.content || "").trim()) return;
+    var o = location.origin;
+    var local =
+      /^(https?:\/\/)(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/i.test(o);
+    if (local || o === "null" || (o && o.startsWith("file:"))) return;
+    if (o && !o.startsWith("file:")) {
+      window.VERA_LOCAL_BACKEND_ORIGIN = "https://vera-api.vera-api-ned.workers.dev";
+    }
+  } catch (e) {}
+})();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="app.js?v=22"></script>
 </body>
 </html>
-
-
-
-
 

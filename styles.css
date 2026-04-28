@@ -22,7 +22,28 @@ body {
 body.app-open {
   overflow: hidden;
 }
+body.app-open #bg-video {
+  opacity: 0;
+  pointer-events: none;
+}
 
+body.bmo-open::before {
+  /* Match mouth PNG fill (sampled ~#D6F2D1); tweak --bmo-screen-mint if your export differs */
+  background: var(--bmo-screen-mint, #d6f2d1) !important;
+}
+
+body.bmo-open #bg-video {
+  display: none !important;
+}
+
+body.bmo-open {
+  --bg-z: -1;
+  --bmo-screen-mint: #d6f2d1;
+  --bmo-screen-mint-rgb: 214, 242, 209;
+  overflow: hidden;
+  color: #183127;
+  background-color: var(--bmo-screen-mint);
+}
 /* =========================
    GRADIENT BACKGROUND
 ========================= */
@@ -145,6 +166,67 @@ body.vera-mode {
 .intro-btn.sound { left: 32px; }
 .intro-btn.skip  { right: 32px; }
 
+.boot-loader[hidden] {
+  display: none !important;
+}
+.boot-loader {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.boot-loader.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.boot-loader {
+  position: fixed;
+  inset: 0;
+  background: #05070c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.boot-inner {
+  width: 280px;
+  text-align: center;
+  font-family: monospace;
+  letter-spacing: 0.1em;
+}
+
+.boot-label {
+  opacity: 0.6;
+  margin-bottom: 20px;
+}
+
+.boot-progress {
+  height: 2px;
+  background: rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+
+.boot-bar {
+  height: 100%;
+  width: 0%;
+  background: white;
+  transition: width 0.4s ease;
+}
+
+.boot-percent {
+  margin-top: 14px;
+  font-size: 0.9rem;
+  opacity: 0.6;
+}
+.boot-note {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin-top: 16px;
+  text-align: center;
+  max-width: 340px;
+  line-height: 1.4;
+}
 /* =========================
    TOP NAV
 ========================= */
@@ -177,6 +259,15 @@ body.vera-mode {
   padding: 0;
   appearance: none;
   -webkit-appearance: none;
+}
+
+.nav-logo-bmo {
+  color: rgba(216, 247, 214, 0.95);
+  opacity: 0.9;
+}
+
+.nav-logo-bmo:hover {
+  opacity: 1;
 }
 
 .nav-right {
@@ -444,6 +535,238 @@ body.vera-mode {
 /* =========================
    HERO — ABOUT VERA
 ========================= */
+.vera-use-cases {
+  padding: 160px 0 120px;
+}
+.vera-use-cases::after {
+  content: "";
+  display: block;
+
+  width: 100%;
+  max-width: 900px;
+  height: 1px;
+
+  margin: 120px auto 0;
+
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255,255,255,0.12),
+    transparent
+  );
+}
+
+.vera-use-cases::after {
+  opacity: 0;          /* invisible */
+  pointer-events: none;
+}
+
+/* 🔑 centers content like hero / patch notes */
+.vera-use-cases-inner {
+  max-width: 1000px;   /* 🔑 editorial, premium width */
+
+  margin: 0 auto;
+  padding: 0 2rem;
+
+  text-align: left;
+}
+.vera-use-cases-inner > .vera-section-title {
+  text-align: center;
+}
+.vera-section-title.soft {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);  /* 🔑 smaller */
+  font-weight: 500;
+
+  letter-spacing: 0.02em;
+  text-transform: none;
+
+  opacity: 0.95;
+  margin-bottom: 32px;
+  color: rgba(255,255,255,0.95);
+}
+
+.use-cases-panel {
+  max-width: 100%;
+  margin: 0;
+}
+
+.use-cases-window {
+  width: 100%;
+  max-width: 1000px;      /* 🔥 very wide */
+  min-height: 360px;     /* 🔥 tall enough to feel like a stage */
+
+  margin: 0 auto;
+
+  padding: 72px 88px;
+
+  background: rgba(255,255,255,0.035);
+  backdrop-filter: blur(14px);
+
+  border-radius: 32px;
+  border: 1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+    0 60px 160px rgba(0,0,0,0.5);
+}
+
+.vera-section-title.soft {
+  margin-bottom: 40px; /* was too tight */
+}
+/* layout */
+.use-cases-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+/* left nav */
+.use-cases-nav {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  margin-top: 12px; /* aligns with window content */
+}
+.use-cases-nav {
+  gap: 22px;          /* was ~18 */
+  margin-bottom: 36px;
+}
+/* buttons */
+.use-case-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.28); /* slightly stronger */
+
+  padding: 10px 18px;        /* 🔑 bigger hit area */
+  min-height: 40px;          /* 🔑 consistent height */
+
+  font-size: 13px;           /* 🔑 larger text */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+
+  border-radius: 999px;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+
+.use-case-btn {
+  width: 100%;
+  text-align: left;
+
+  padding: 8px 12px;
+
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  background: transparent;
+  border: none;
+
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.use-case-btn:hover {
+  color: rgba(255,255,255,0.95);
+  border-color: rgba(255,255,255,0.55);
+}
+
+.use-case-btn.active {
+  background: rgba(255,255,255,0.9);
+  border-color: rgba(255,255,255,0.9);
+  color: #000;
+}
+.use-case-btn {
+  filter: grayscale(100%);
+  opacity: 0.8;
+
+  /* 🔑 FORCE SINGLE LINE */
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+}
+
+
+/* 🔑 THIS IS WHY ALL CONTENT SHOWED BEFORE */
+.use-case-content {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  max-width: 720px;
+  margin: 0 auto;
+
+  padding: 0 16px;
+
+  /* 👇 subtle intentional bias */
+  transform: translate(-44px, -28px);
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+}
+
+.use-case-content.active {
+  opacity: 1;
+  transform: translate(-40px, -28px);
+}
+
+.use-case-content.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.use-cases-panel {
+  position: relative;
+  display: flex;
+  align-items: center;   /* 🔑 THIS is the missing anchor */
+}
+
+.use-case-content h3 {
+  margin-top: 0;
+  margin-bottom: 14px;
+
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  opacity: 0.85;
+}
+
+.use-case-content p {
+  line-height: 1.7;
+  opacity: 0.9;
+}
+
+/* =========================
+   USE CASES — MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .use-cases-nav {
+    display: flex;
+    flex-wrap: wrap;          /* 🔑 allow wrapping */
+    gap: 12px;                /* spacing like reference */
+    align-items: center;
+  }
+}
+
 
 .hero {
   min-height: 100vh;
@@ -502,6 +825,143 @@ body.vera-mode {
   position: relative;        /* 🔑 anchor for the line */
 }
 
+/* =========================
+   HOW TO USE VERA — ACCESS
+========================= */
+
+.vera-use-access {
+  padding: 220px 0 200px;   /* 🔑 more vertical air */
+  position: relative;
+}
+
+/* subtle divider ABOVE the section */
+.vera-use-access::before {
+  content: "";
+  display: block;
+
+  width: 100%;
+  max-width: 900px;
+  height: 1px;
+
+  margin: 0 auto 120px;
+
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255,255,255,0.12),
+    transparent
+  );
+}
+
+.vera-use-access::before {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* centered editorial container */
+.vera-use-access-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+
+  text-align: center;
+}
+
+/* title spacing tweak */
+.vera-use-access .vera-section-title {
+  margin-bottom: 32px;
+}
+
+/* body copy */
+.vera-use-access-text {
+  font-size: 16px;
+  line-height: 1.75;
+  opacity: 0.9;
+
+  max-width: 720px;
+  margin: 0 auto 48px;
+}
+
+/* placeholder area (future input UI) */
+.vera-use-access-placeholder {
+  height: 120px;
+  border-radius: 18px;
+
+  background: rgba(255,255,255,0.035);
+  border: 1px dashed rgba(255,255,255,0.18);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vera-access-form {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.vera-access-form input {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #eaeaea;
+  font-size: 14px;
+}
+
+.vera-access-form button {
+  background: rgba(255,255,255,0.9);
+  color: #000;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 22px;
+  cursor: pointer;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+}
+.vera-access-note {
+  margin-top: 16px;
+  font-size: 13px;
+  opacity: 0.55;
+  text-align: center;
+}
+
+.vera-inline-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  opacity: 0.85;
+}
+
+.vera-inline-link:hover {
+  opacity: 1;
+}
+
+.type-title {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+
+.type-title[data-typed="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+.typing-cursor::after {
+  content: "";
+  margin-left: 4px;
+  animation: blink 1s infinite;
+  opacity: 0.7;
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 0.7; }
+  25%, 75% { opacity: 0; }
+}
 /* subtle vertical guide */
 /* #about-vera .hero-split::before {
   content: "";
@@ -569,7 +1029,7 @@ body.vera-mode {
   display: block;
   width: 100%;
   height: 1px;
-  margin-top: 140px;
+  margin-top: 90px;
 
   background: linear-gradient(
     to right,
@@ -578,7 +1038,6 @@ body.vera-mode {
     transparent
   );
 }
-
 .vera-log-inner {
   max-width: 900px;
   margin: 0 auto;
@@ -586,6 +1045,116 @@ body.vera-mode {
   color: #e6e6e6;
 }
 
+/* main container */
+.patch-collapse {
+  margin-top: 12px;
+}
+
+/* remove default marker */
+.patch-collapse summary,
+.patch-version summary {
+  list-style: none;
+}
+
+.patch-collapse summary::-webkit-details-marker,
+.patch-version summary::-webkit-details-marker {
+  display: none;
+}
+
+/* MAIN TITLE (PATCH NOTES / DEV LOGS) */
+.patch-main-title {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+  opacity: 0.9;
+
+  cursor: pointer;
+  position: relative;
+  padding-right: 28px;
+}
+
+/* VERSION HEADINGS */
+.patch-version summary {
+  font-size: 1.6rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+
+  margin-top: 28px;
+  padding-right: 24px;
+  position: relative;
+}
+
+/* arrow indicator */
+.patch-collapse summary::after,
+.patch-version summary::after {
+  content: "▸";
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  opacity: 0.6;
+}
+
+.patch-collapse[open] > summary::after,
+.patch-version[open] > summary::after {
+  transform: rotate(90deg);
+  opacity: 1;
+}
+.patch-collapse[open] > .patch-version:first-of-type {
+  margin-top: 32px;
+}
+
+/* also add slight bottom padding to main title */
+.patch-main-title {
+  padding-bottom: 12px;
+}
+/* subtle spacing */
+.patch-version[open] {
+  padding-bottom: 12px;
+}
+.patch-version[open] > *:not(summary):first-of-type {
+  margin-top: 18px;
+}
+
+/* slightly more breathing room under summary */
+.patch-version summary {
+  padding-bottom: 8px;
+}
+.patch-version summary {
+  font-weight: 600;
+}
+/* soften hr when inside collapsible */
+.patch-collapse hr {
+  margin: 36px 0;
+}
+.patch-collapse .patch-version {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* stagger class added via JS */
+.patch-collapse.animate-versions .patch-version {
+  opacity: 1;
+  transform: translateY(0);
+}
+.patch-version .patch-content {
+  opacity: 0;
+  transform: translateY(-25px);
+  max-height: 0;
+  overflow: hidden;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease,
+    max-height 0.6s ease;
+}
+
+.patch-version.animate .patch-content {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 10000px;
+}
 .vera-log h2 {
   font-size: 1.8rem;
   margin-bottom: 12px;
@@ -914,15 +1483,722 @@ body.vera-mode {
   user-select: none;
 }
 
+#vera-app,
+#vera-app {
+  transition: opacity 0.8s ease;
+}
+
+#home {
+  transition: opacity 1.4s cubic-bezier(0.22, 0.8, 0.2, 1);
+}
+
+#bmo-page {
+  min-height: 100vh;
+  opacity: 1;
+  transition: opacity 0.55s ease;
+  background-color: var(--bmo-screen-mint, #d6f2d1);
+}
+
+#bmo-loading-screen {
+  min-height: 100vh;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+  background-color: var(--bmo-screen-mint, #d6f2d1);
+}
+
+/* hidden state */
+.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fade-in {
+  opacity: 1;
+}
+
+/* =========================
+   BMO LOADING
+========================= */
+
+.bmo-loading-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.bmo-loading-card {
+  width: min(420px, calc(100vw - 40px));
+  padding: 28px 26px 24px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  font-family: "Courier New", monospace;
+  image-rendering: pixelated;
+}
+
+.bmo-loading-title {
+  color: #050505;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  text-align: center;
+  text-shadow: none;
+}
+
+.bmo-loading-dots {
+  display: inline-block;
+  vertical-align: baseline;
+  min-width: 3ch;
+  text-align: left;
+}
+
+.bmo-loading-track {
+  height: 18px;
+  background: #050505;
+  border: 3px solid #252525;
+  overflow: hidden;
+}
+
+.bmo-loading-bar {
+  width: 0%;
+  height: 100%;
+  background: var(--bmo-screen-mint, #d6f2d1);
+  box-shadow: inset 0 0 0 2px rgba(24, 49, 39, 0.16);
+  animation: bmoLoadingFill 4s linear forwards;
+}
+
+@keyframes bmoLoadingFill {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+/* =========================
+   BMO PAGE
+========================= */
+
+.bmo-shell {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 0 24px;
+}
+
+/* Pipeline + face share one scroll column */
+.bmo-shell.chat-centered {
+  padding-top: 56px;
+  padding-bottom: 120px;
+}
+
+.bmo-header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.bmo-home-btn {
+  color: rgba(24, 49, 39, 0.9);
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.bmo-stage {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0;
+}
+
+.bmo-character-frame {
+  width: min(420px, 82vw);
+  aspect-ratio: 0.82;
+  border-radius: 34px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.bmo-screen-shell {
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.bmo-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #183127;
+  padding: 24px;
+}
+
+.bmo-face {
+  width: min(360px, 82%);
+  aspect-ratio: 1.45;
+  position: relative;
+}
+
+.bmo-eyes {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 18px;
+  margin-top: 14%;
+}
+
+.bmo-eye {
+  width: 34px;
+  height: 48px;
+  flex-shrink: 0;
+  display: block;
+  overflow: visible;
+  transform: scale(0.55);
+  transform-origin: center center;
+  filter: drop-shadow(0 0 0 1px rgba(29, 32, 53, 0.08));
+}
+
+.bmo-smile-wrap {
+  position: absolute;
+  left: 50%;
+  /* Lower — closer to chin / below eyes */
+  bottom: -7%;
+  transform: translateX(-50%);
+  width: 58%;
+  min-height: 72px;
+  height: auto;
+  max-height: 62%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: visible;
+}
+
+.bmo-smile {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  opacity: 0;
+}
+
+.bmo-smile-path {
+  stroke-width: 3.35;
+  vector-effect: non-scaling-stroke;
+  transition: opacity 0.22s ease;
+}
+
+/* TTS toggles smile vs filled mouth instantly (no opacity tween while speaking). */
+.bmo-page.bmo-tts-mouth .bmo-smile-path {
+  transition: none;
+}
+
+/* Stroke smile = idle; filled mouth layers for TTS / intro. Discrete layers — no scaleY morph. */
+.bmo-mouth-inner {
+  transform: none;
+  transform-origin: 0 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: none;
+}
+
+.bmo-mouth-layer {
+  display: none;
+}
+
+/* Intro / legacy: show happy mouth only */
+.bmo-page.bmo-mouth-active .bmo-mouth-inner {
+  opacity: 1;
+}
+
+.bmo-page.bmo-mouth-active .bmo-smile-path {
+  opacity: 0;
+}
+
+.bmo-page.bmo-mouth-active .bmo-mouth-layer--happy {
+  display: block;
+}
+
+.bmo-page.bmo-mouth-active .bmo-mouth-layer--surprised {
+  display: none;
+}
+
+/* TTS: idle = stroke only; surprised / happy = one filled layer */
+.bmo-page.bmo-tts-mouth .bmo-smile[data-bmo-tts-emotion="idle"] .bmo-mouth-inner {
+  opacity: 0;
+}
+
+.bmo-page.bmo-tts-mouth .bmo-smile[data-bmo-tts-emotion="idle"] .bmo-smile-path {
+  opacity: 1;
+}
+
+.bmo-page.bmo-tts-mouth .bmo-smile[data-bmo-tts-emotion="surprised"] .bmo-mouth-inner,
+.bmo-page.bmo-tts-mouth .bmo-smile[data-bmo-tts-emotion="happy"] .bmo-mouth-inner {
+  opacity: 1;
+}
+
+.bmo-page.bmo-tts-mouth .bmo-smile[data-bmo-tts-emotion="surprised"] .bmo-smile-path,
+.bmo-page.bmo-tts-mouth .bmo-smile[data-bmo-tts-emotion="happy"] .bmo-smile-path {
+  opacity: 0;
+}
+
+.bmo-page.bmo-tts-mouth .bmo-smile[data-bmo-tts-emotion="surprised"] .bmo-mouth-layer--surprised {
+  display: block;
+}
+
+.bmo-page.bmo-tts-mouth .bmo-smile[data-bmo-tts-emotion="happy"] .bmo-mouth-layer--happy {
+  display: block;
+}
+
+.bmo-page.bmo-mouth-active .bmo-mouth-inner path,
+.bmo-page.bmo-mouth-active .bmo-mouth-inner ellipse,
+.bmo-page.bmo-tts-mouth .bmo-mouth-inner path,
+.bmo-page.bmo-tts-mouth .bmo-mouth-inner ellipse {
+  stroke: #0a0a0a;
+  stroke-width: 4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  paint-order: stroke fill;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Tongue: no outline (matches emotion test) */
+.bmo-page.bmo-mouth-active .bmo-mouth-inner .bmo-mouth-tongue,
+.bmo-page.bmo-tts-mouth .bmo-mouth-inner .bmo-mouth-tongue {
+  stroke: none;
+}
+
+.bmo-intro-caption {
+  width: min(640px, calc(100vw - 40px));
+  margin: 0 auto;
+  padding: 10px 20px 6px;
+  min-height: 2.75em;
+  text-align: center;
+  font-size: clamp(0.95rem, 2.6vw, 1.1rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(24, 49, 39, 0.88);
+  line-height: 1.35;
+}
+
+/* BMO: hide intro / startup lines; center face in the main viewport band */
+#bmo-page .bmo-intro-caption,
+#bmo-page #bmo-startup-text {
+  display: none !important;
+}
+
+#bmo-page .bmo-shell.chat-centered {
+  --bmo-chat-log-width: 280px;
+  --bmo-chat-log-gutter: 14px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: 0;
+  /* Reserve space for fixed input dock; chat column fills area above it */
+  padding-bottom: 120px;
+  align-items: stretch;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+/* Left log + centered column; log opens after header/input (see animation delays). */
+#bmo-page .bmo-body-row {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-height: 0;
+  width: 100%;
+  position: relative;
+}
+
+/* Floated card: inset from edges, full column height, sharp (no backdrop blur). */
+#bmo-page .bmo-chat-log {
+  flex: 0 0 auto;
+  width: var(--bmo-chat-log-width);
+  max-width: 0;
+  min-height: 0;
+  align-self: stretch;
+  overflow: hidden;
+  opacity: 0;
+  margin: var(--bmo-chat-log-gutter) 0 var(--bmo-chat-log-gutter)
+    var(--bmo-chat-log-gutter);
+  border-radius: 18px;
+  border: 1px solid rgba(24, 49, 39, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow:
+    0 12px 36px rgba(24, 49, 39, 0.1),
+    0 2px 8px rgba(24, 49, 39, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  box-sizing: border-box;
+}
+
+#bmo-page .bmo-chat-log-inner {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0 12px;
+  box-sizing: border-box;
+}
+
+#bmo-page .bmo-chat-log-head {
+  flex: 0 0 auto;
+  margin: 0 10px 0;
+  padding: 14px 14px 12px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(24, 49, 39, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+}
+
+#bmo-page .bmo-chat-log-head-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(24, 49, 39, 0.45);
+  margin-bottom: 2px;
+}
+
+#bmo-page .bmo-chat-log-head-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(20, 40, 30, 0.95);
+}
+
+#bmo-page .bmo-chat-log-conversation {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: none;
+  margin: 10px 0 0;
+  padding: 4px 10px 24px;
+  gap: 10px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(24, 49, 39, 0.22) transparent;
+}
+
+#bmo-page .bmo-chat-log-conversation::-webkit-scrollbar {
+  width: 6px;
+}
+
+#bmo-page .bmo-chat-log-conversation::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#bmo-page .bmo-chat-log-conversation::-webkit-scrollbar-thumb {
+  background: rgba(24, 49, 39, 0.2);
+  border-radius: 99px;
+}
+
+#bmo-page .bmo-chat-log-conversation::-webkit-scrollbar-thumb:hover {
+  background: rgba(24, 49, 39, 0.32);
+}
+
+/* Quiet empty state */
+#bmo-page .bmo-chat-log-conversation:empty::before {
+  content: "No messages yet — say hi to VERA.";
+  display: block;
+  padding: 20px 6px 28px;
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 500;
+  color: rgba(24, 49, 39, 0.42);
+  text-align: center;
+}
+
+#bmo-page .bmo-chat-log-conversation .bubble {
+  max-width: 100%;
+}
+
+#bmo-page .bmo-chat-log-conversation .message-row {
+  margin-bottom: 4px;
+}
+
+#bmo-page .bmo-center-column {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* BMO: keep VERA chip in the column flow so it shifts with the face when the log opens */
+#bmo-page .chat-header.bmo-chat-header {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  width: 100%;
+  max-width: 100%;
+  padding: 18px 28px 0 24px;
+  box-sizing: border-box;
+  justify-content: flex-start;
+  z-index: 5;
+}
+
+#bmo-page .bmo-stage {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: min(520px, calc(100dvh - 220px));
+  max-height: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px 8px;
+  box-sizing: border-box;
+}
+
+/* 2.55s + 0.9s bmoUiFadeIn = 3.45s — chat log slides in after header + input bar */
+@keyframes bmoChatLogOpen {
+  from {
+    max-width: 0;
+    opacity: 0;
+  }
+  to {
+    max-width: var(--bmo-chat-log-width);
+    opacity: 1;
+  }
+}
+
+@keyframes bmoChatLogInnerIn {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bmoBmoInputPadForLog {
+  from {
+    padding-left: 20px;
+  }
+  to {
+    padding-left: calc(
+      var(--bmo-chat-log-width) + var(--bmo-chat-log-gutter) + 20px
+    );
+  }
+}
+
+.bmo-page.bmo-animate-in .bmo-chat-log {
+  animation: bmoChatLogOpen 0.68s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 3.45s;
+}
+
+.bmo-page.bmo-animate-in .bmo-chat-log-inner {
+  animation: bmoChatLogInnerIn 0.55s ease forwards;
+  animation-delay: 3.45s;
+  opacity: 0;
+}
+
+.bmo-page.bmo-animate-in .input-container {
+  opacity: 0;
+  transform: translateY(-8px);
+  padding-right: 20px;
+  padding-left: 20px;
+  box-sizing: border-box;
+  animation:
+    bmoUiFadeIn 0.9s ease forwards 2.55s,
+    bmoBmoInputPadForLog 0.68s cubic-bezier(0.22, 1, 0.36, 1) forwards 3.45s;
+}
+
+@media (max-width: 640px) {
+  #bmo-page .bmo-shell.chat-centered {
+    --bmo-chat-log-width: 220px;
+    --bmo-chat-log-gutter: 10px;
+  }
+}
+
+/* BMO: no side chat log on phone — face + input only (#bmo-conversation still exists for JS). */
+@media (max-width: 768px) {
+  #bmo-page .bmo-chat-log {
+    display: none !important;
+  }
+
+  .bmo-page.bmo-animate-in .bmo-chat-log,
+  .bmo-page.bmo-animate-in .bmo-chat-log-inner {
+    animation: none !important;
+  }
+
+  /* Skip left padding animation that made room for the log */
+  .bmo-page.bmo-animate-in .input-container {
+    animation: bmoUiFadeIn 0.9s ease forwards 2.55s !important;
+    padding-left: 20px !important;
+  }
+
+  /* Phone: nudge eyes up, mouth a bit lower (desktop layout unchanged). */
+  #bmo-page .bmo-eyes {
+    margin-top: 6%;
+    transform: translateY(-10px);
+  }
+
+  #bmo-page .bmo-smile-wrap {
+    bottom: -13%;
+  }
+}
+
+/* BMO: row stack — center with bar; undo global chat-started translateY on toggle. */
+body.bmo-open #bmo-input-toggle.input-toggle-btn {
+  transform: none !important;
+  margin: 0;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.bmo-input-dock {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.bmo-input-bar {
+  width: min(760px, calc(100vw - 40px));
+  min-height: 72px;
+  border-radius: 999px;
+  background: rgba(var(--bmo-screen-mint-rgb, 214, 242, 209), 0.9);
+  border: 1px solid rgba(24, 49, 39, 0.14);
+  box-shadow: 0 16px 40px rgba(56, 123, 84, 0.14);
+  backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 18px;
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.bmo-input-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(24, 49, 39, 0.12);
+  background: rgba(165, 220, 174, 0.65);
+  color: #183127;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.bmo-input-text {
+  flex: 1;
+  min-width: 0;
+  padding: 0 8px;
+  color: rgba(24, 49, 39, 0.72);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.bmo-page.bmo-animate-in .bmo-eye {
+  animation: bmoEyesOpen 1.9s cubic-bezier(0.2, 0.9, 0.25, 1) forwards;
+}
+
+/* Vector smile fades in after eyes (1.9s) */
+.bmo-page.bmo-animate-in .bmo-smile {
+  animation: bmoSmileRevealAfterEyes 0.65s ease forwards;
+  animation-delay: 1.9s;
+}
+
+/* After smile finishes (1.9s + 0.65s), header + bottom dock fade in together */
+.bmo-page.bmo-animate-in .bmo-home-btn {
+  animation: bmoUiFadeIn 0.9s ease forwards;
+  animation-delay: 2.55s;
+}
+
+/* Real pipeline: .input-container uses dual animation above; .input-bar fades with header */
+.bmo-page.bmo-animate-in .bmo-input-bar {
+  animation: bmoUiFadeIn 0.9s ease forwards;
+  animation-delay: 2.55s;
+}
+
+@keyframes bmoEyesOpen {
+  0% {
+    transform: scale(0.55);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bmoSmileRevealAfterEyes {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bmoUiFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 0.88;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bmoUiFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* =========================
    MAIN LAYOUT (VERA APP)
 ========================= */
-
-.layout {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-}
 
 .mic-status {
   display: flex;
@@ -962,8 +2238,46 @@ body.vera-mode {
 .ptt-btn:active {
   background: rgba(255,255,255,0.25);
 }
+/* =========================
+   INPUT MODE TOGGLE
+========================= */
 
-#text-input {
+.input-toggle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+
+  background: rgba(255,255,255,0.08);
+  color: #eaeaea;
+  font-size: 16px;
+
+  cursor: pointer;
+  opacity: 0.75;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+body.chat-started .input-toggle-btn {
+  transform: translateY(-16px); /* tweak 3–8px */
+  transition: 
+    transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1),
+    background 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.input-toggle-btn:hover {
+  opacity: 1;
+  background: rgba(255,255,255,0.15);
+}
+
+#text-input,
+#vera-text-input,
+#bmo-text-input {
   flex: 1;
   min-width: 0;
 
@@ -979,11 +2293,15 @@ body.vera-mode {
   outline: none;
 }
 
-#text-input::placeholder {
+#text-input::placeholder,
+#vera-text-input::placeholder,
+#bmo-text-input::placeholder {
   color: rgba(255, 255, 255, 0.4);
 }
 
-#send-text {
+#send-text,
+#vera-send-text,
+#bmo-send-text {
   background: rgba(255, 255, 255, 0.1);
   border: none;
   border-radius: 10px;
@@ -992,44 +2310,10 @@ body.vera-mode {
   color: #eaeaea;
 }
 
-#send-text:hover {
+#send-text:hover,
+#vera-send-text:hover,
+#bmo-send-text:hover {
   background: rgba(255, 255, 255, 0.2);
-}
-/* =========================
-   SIDEBAR
-========================= */
-
-.sidebar {
-  width: 32%;
-  min-width: 300px;
-  max-width: 420px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  background: rgba(255,255,255,0.04);
-  overflow-y: auto;
-}
-
-.sidebar-section {
-  background: rgba(255,255,255,0.05);
-  padding: 16px;
-  border-radius: 12px;
-}
-
-.sidebar-bottom {
-  margin-top: auto;
-}
-
-.sidebar h2 {
-  margin-top: 0;
-  font-size: 18px;
-}
-
-.sidebar p,
-.sidebar li {
-  font-size: 14px;
-  color: #cfd8df;
 }
 
 /* =========================
@@ -1098,23 +2382,2755 @@ body.vera-mode {
 }
 
 /* =========================
-   CHAT
+   VERA APP — CENTERED LAYOUT
+========================= */
+/* =========================
+   INPUT SYSTEM (FINAL CLEAN)
 ========================= */
 
-.chat {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background: rgba(255,255,255,0.02);
+.hidden {
+  display: none !important;
 }
 
-.conversation {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
+.input-container {
+  position: fixed;
+  inset: 0;
 
-  padding-bottom: calc(32px + env(safe-area-inset-bottom)); /* 🔑 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+
+  pointer-events: none;
+}
+
+/* Interrupt / VAD debug (sibling of .input-bar): parent has pointer-events: none */
+.interrupt-debug-extender {
+  pointer-events: auto;
+}
+
+.input-toggle-btn {
+  pointer-events: auto;
+}
+
+/* shared style */
+.input-bar {
+  pointer-events: auto;
+
+  width: 100%;
+  max-width: 760px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px 18px;
+
+  border-radius: 28px;
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.08);
+
+  transition: all 0.4s ease;
+}
+
+/* =========================
+   STARTUP TYPING TEXT
+========================= */
+
+.startup-text {
+  position: absolute;
+  top: calc(50% - 110px);
+  left: 50%;
+  transform: translateX(-50%);
+
+  max-width: 600px;
+  text-align: center;
+
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+
+  color: rgba(255,255,255,0.85);
+
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+/* hide after first message */
+body.chat-started .startup-text {
+  opacity: 0;
+  transform: translate(-50%, -12px);
+  pointer-events: none;
+}
+/* =========================
+   CHAT STARTED MODE
+========================= */
+
+body.chat-started .input-container {
+  align-items: flex-end;
+  padding-bottom: 40px;   /* 🔥 was 40px */
+}
+
+/* Bottom-right: productivity (music) + optional signed-in user label */
+.vera-bottom-right-tools,
+.bmo-bottom-right-tools {
+  position: fixed;
+  bottom: 14px;
+  right: 20px;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.vera-bottom-left-tools,
+.bmo-bottom-left-tools {
+  position: fixed;
+  bottom: 14px;
+  left: 20px;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.bmo-bottom-left-tools {
+  bottom: 18px;
+}
+
+.bmo-bottom-right-tools {
+  bottom: 18px;
+}
+
+.productivity-mode-btn {
+  pointer-events: auto;
+  border: 1px solid rgba(30, 215, 96, 0.35);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(30, 215, 96, 0.12);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.productivity-mode-btn:hover {
+  background: rgba(30, 215, 96, 0.22);
+  border-color: rgba(30, 215, 96, 0.55);
+}
+
+.productivity-mode-btn:active {
+  transform: scale(0.98);
+}
+
+.productivity-mode-btn.is-active {
+  background: rgba(30, 215, 96, 0.28);
+  border-color: rgba(30, 215, 96, 0.65);
+  box-shadow: 0 0 0 1px rgba(30, 215, 96, 0.25);
+}
+
+.vera-settings-fab {
+  pointer-events: auto;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(12, 18, 28, 0.45);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.vera-settings-fab:hover {
+  background: rgba(24, 32, 48, 0.55);
+  border-color: rgba(255, 255, 255, 0.42);
+}
+
+.vera-settings-fab:active {
+  transform: scale(0.98);
+}
+
+/* Signed-in user name (POST /api/user/sign-in) */
+.vera-active-user-label {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.72);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+/* Spotify-style productivity panel (same #vera-side-pane / #bmo-side-pane as news) */
+.spotify-brand {
+  color: #1ed760 !important;
+  font-weight: 600;
+}
+
+.spotify-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.spotify-view-toggle {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.spotify-view-tab {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.spotify-view-tab.active {
+  border-color: rgba(30, 215, 96, 0.5);
+  background: rgba(30, 215, 96, 0.22);
+}
+
+.spotify-now-playing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.spotify-art-placeholder {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  background: linear-gradient(145deg, rgba(30, 215, 96, 0.25), rgba(0, 0, 0, 0.4));
+  flex-shrink: 0;
+}
+
+.spotify-track-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.spotify-track-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f5f7fb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spotify-track-artist {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spotify-progress-wrap {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.spotify-time-text {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.62);
+  min-width: 32px;
+  text-align: center;
+}
+
+.spotify-progress {
+  width: 100%;
+  accent-color: #1ed760;
+  cursor: pointer;
+}
+
+.spotify-transport {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.spotify-transport-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.spotify-transport-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.spotify-transport-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.spotify-play-btn {
+  width: 48px;
+  height: 48px;
+  background: rgba(30, 215, 96, 0.25);
+  border-color: rgba(30, 215, 96, 0.4);
+}
+
+.spotify-volume-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+  padding: 0 6px;
+}
+
+.spotify-volume-icon {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.spotify-volume {
+  width: 96px;
+  accent-color: #1ed760;
+  cursor: pointer;
+}
+
+.spotify-search-form {
+  display: flex;
+  gap: 8px;
+}
+
+/* Playlist tab: catalog search is hidden (belt-and-suspenders with [hidden] — flex on <form> can win in some engines). */
+.spotify-panel-body[data-spotify-view="playlist"] .spotify-search-form {
+  display: none !important;
+}
+
+.spotify-search-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 13px;
+}
+
+.spotify-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.spotify-search-submit {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(30, 215, 96, 0.4);
+  background: rgba(30, 215, 96, 0.18);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.spotify-search-submit:hover {
+  background: rgba(30, 215, 96, 0.3);
+}
+
+.spotify-results {
+  min-height: 0;
+  max-height: min(40vh, 320px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.spotify-playlist-view {
+  min-width: 0;
+}
+
+.spotify-playlist-root.spotify-results {
+  max-height: min(40vh, 320px);
+}
+
+.spotify-playlist-row.is-selected {
+  border-color: rgba(30, 215, 96, 0.55);
+  background: rgba(30, 215, 96, 0.26);
+}
+
+.spotify-playlist-row.is-selected:hover {
+  background: rgba(30, 215, 96, 0.34);
+  border-color: rgba(30, 215, 96, 0.65);
+}
+
+.spotify-results-hint {
+  margin: 0;
+  padding: 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.spotify-results-hint code {
+  font-size: 11px;
+  color: rgba(30, 215, 96, 0.85);
+}
+
+.spotify-results-error {
+  margin: 0;
+  padding: 12px;
+  font-size: 12px;
+  color: #ff8a8a;
+}
+
+.spotify-result-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  color: inherit;
+  font: inherit;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.spotify-result-row:hover {
+  background: rgba(30, 215, 96, 0.12);
+  border-color: rgba(30, 215, 96, 0.2);
+}
+
+.spotify-result-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: rgba(0, 0, 0, 0.35);
+  flex-shrink: 0;
+}
+
+.spotify-result-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.spotify-result-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f0f4fc;
+}
+
+.spotify-result-title-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: inherit;
+  color: inherit;
+}
+
+.spotify-result-kind {
+  flex: 0 0 auto;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(30, 215, 96, 0.95);
+  border: 1px solid rgba(30, 215, 96, 0.4);
+  border-radius: 4px;
+  padding: 2px 5px;
+  line-height: 1.2;
+}
+
+.spotify-result-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Search drill-in: album track list + artist top tracks */
+.spotify-search-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.spotify-search-back {
+  align-self: flex-start;
+  padding: 4px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(30, 215, 96, 0.95);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.spotify-search-back:hover {
+  color: #1ed760;
+}
+
+.spotify-search-detail-head {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.spotify-search-detail-cover {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.spotify-search-detail-cover--ph {
+  background: linear-gradient(145deg, rgba(30, 215, 96, 0.25), rgba(0, 0, 0, 0.4));
+}
+
+.spotify-search-detail-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.spotify-search-detail-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f5f7fb;
+  line-height: 1.25;
+}
+
+.spotify-search-detail-sub {
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.35;
+}
+
+.spotify-album-play-triangle {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  margin: 0 0 0 4px;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid rgba(30, 215, 96, 0.45);
+  background: rgba(30, 215, 96, 0.18);
+  color: #1ed760;
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spotify-album-play-triangle:hover {
+  background: rgba(30, 215, 96, 0.28);
+}
+
+/* Track rows scroll with the parent `.spotify-results` only — avoid nested scrollbars in album/playlist drill-in. */
+.spotify-detail-tracklist {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.spotify-detail-track-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  color: inherit;
+  font: inherit;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.spotify-detail-track-row:hover {
+  background: rgba(30, 215, 96, 0.12);
+  border-color: rgba(30, 215, 96, 0.2);
+}
+
+.spotify-artist-top-more {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.spotify-artist-top-more:hover {
+  background: rgba(30, 215, 96, 0.14);
+  border-color: rgba(30, 215, 96, 0.28);
+}
+
+.spotify-artist-more-arrow {
+  font-size: 12px;
+  line-height: 1;
+  color: rgba(30, 215, 96, 0.95);
+}
+
+.spotify-connect-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.spotify-connect-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1ed760;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(30, 215, 96, 0.45);
+  background: rgba(30, 215, 96, 0.1);
+  transition: background 0.2s ease;
+}
+
+.spotify-connect-link:hover {
+  background: rgba(30, 215, 96, 0.2);
+}
+
+.spotify-logout-btn {
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+}
+
+.spotify-connected-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(30, 215, 96, 0.9);
+}
+
+body.chat-started .input-bar {
+  position: relative;
+  pointer-events: auto;
+
+  transform: translateY(0);
+}
+/* =========================
+   CHAT HEADER (FLOW MODE)
+========================= */
+
+.chat-header {
+  position: fixed;
+  top: 20px;
+  left: 24px;
+  right: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  z-index: 1000;
+}
+
+/* VERA app header: same treatment for both wordmarks; BMO is green (.nav-logo-bmo) */
+.vera-app-header .nav-logo {
+  pointer-events: auto;
+}
+
+.vera-app-header .nav-logo:hover {
+  opacity: 1;
+}
+
+/* Match VERA opacity; global .nav-logo-bmo defaults to 0.9 */
+.vera-app-header .nav-logo.nav-logo-bmo {
+  opacity: 0.6;
+}
+
+.vera-app-header .nav-logo.nav-logo-bmo:hover {
+  opacity: 1;
+}
+
+.vera-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* VERA header (flow): VERA left, BMO right — no center clock */
+#vera-app:not(.work-mode) .vera-app-header.chat-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(8px, 2vw, 20px);
+}
+
+#vera-app:not(.work-mode) .vera-header-datetime {
+  display: none;
+}
+
+#vera-app:not(.work-mode) .vera-header-right {
+  grid-column: 2;
+  justify-self: end;
+}
+
+/* Work mode: VERA | clock pill | BMO */
+#vera-app.work-mode .vera-app-header.chat-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(8px, 2vw, 20px);
+  justify-content: stretch;
+}
+
+.vera-header-left {
+  display: flex;
+  align-items: center;
+  justify-self: start;
+  min-width: 0;
+}
+
+.vera-header-datetime {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 16px 7px 14px;
+  border-radius: 999px;
+  /* Match work-mode panels (.vera-wm-music-pane / .vera-wm-checklist-pane) */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(6, 10, 18, 0.55);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  font-size: clamp(11px, 1.1vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.88);
+  white-space: nowrap;
+  max-width: min(100%, 46vw);
+  min-width: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.vera-datetime-clock {
+  flex-shrink: 0;
+  opacity: 0.88;
+}
+
+.vera-datetime-time {
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.vera-datetime-sep {
+  flex-shrink: 0;
+  width: 1px;
+  height: 1.1em;
+  align-self: center;
+  background: currentColor;
+  opacity: 0.35;
+}
+
+.vera-datetime-date {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* VERA wordmark + SIGN IN + BMO (same nav-logo treatment as BMO) */
+.vera-header-right {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 3vw, 28px);
+  justify-self: end;
+  min-width: 0;
+}
+
+.vera-work-mode-btn {
+  pointer-events: auto;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(12, 18, 28, 0.45);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.vera-work-mode-btn:hover {
+  background: rgba(24, 32, 48, 0.55);
+  border-color: rgba(255, 255, 255, 0.42);
+}
+
+.vera-work-mode-btn:active {
+  transform: scale(0.98);
+}
+
+/* ----- VERA work mode: 3-column layout (music + checklist | reasoning | chat+voice) ----- */
+.vera-body-grid {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.vera-wm-left,
+.vera-wm-center {
+  display: none;
+}
+
+.vera-wm-right {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+#vera-app:not(.work-mode) .vera-body-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  height: auto;
+  width: 100%;
+}
+
+#vera-app:not(.work-mode) .vera-wm-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: auto;
+  width: 100%;
+}
+
+#vera-app:not(.work-mode) .vera-wm-right > .vera-wm-pane-title {
+  display: none !important;
+}
+
+/* Flow mode: while actively listening, dock input row bottom-center above corner tools */
+#vera-app:not(.work-mode) .input-container {
+  transition: padding-bottom 0.38s ease;
+}
+
+/* Match body.chat-started bottom inset so listening and muted land in the same slot */
+#vera-app:not(.work-mode).vera-flow-voice-docked .input-container {
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: max(40px, calc(32px + env(safe-area-inset-bottom, 0px)));
+}
+
+/* Same fade-out as post–first-message layout while voice chrome is docked */
+#vera-app:not(.work-mode).vera-flow-voice-docked #vera-startup-text {
+  opacity: 0;
+  transform: translate(-50%, -12px);
+  pointer-events: none;
+}
+
+/* Bottom fade ~900 — any time voice or keyboard bar is visible in flow mode, not only listening */
+#vera-app:not(.work-mode).vera-flow-input-active .vera-bottom-right-tools {
+  z-index: 1010;
+  isolation: isolate;
+  filter: none;
+}
+
+#vera-app:not(.work-mode).vera-flow-input-active .vera-bottom-left-tools {
+  z-index: 1010;
+  isolation: isolate;
+  filter: none;
+}
+
+#vera-app.work-mode .vera-guide,
+#vera-app.work-mode #vera-user-sign-in,
+#vera-app.work-mode #vera-interrupt-debug-header {
+  display: none !important;
+}
+
+#vera-app.work-mode #vera-active-user-label {
+  display: none !important;
+}
+
+/* Music lives in the work-mode left column; hide the floating Music pill (non–work-mode still uses it). */
+#vera-app.work-mode #vera-productivity-mode {
+  display: none !important;
+}
+
+#vera-app.work-mode .chat-centered::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Bridge header + first row so the clock strip and panel region share one continuous field */
+#vera-app.work-mode > .chat-centered {
+  background-image: linear-gradient(
+    180deg,
+    rgba(6, 12, 22, 0.38) 0%,
+    rgba(6, 12, 22, 0.12) 56px,
+    transparent 112px
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 112px;
+  background-position: top center;
+}
+
+#vera-app.work-mode .vera-body-grid {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.9fr) minmax(260px, 1.35fr) minmax(240px, 1fr);
+  gap: 12px;
+  padding: 14px 10px 12px;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: calc(100vh - 98px);
+  align-items: stretch;
+}
+
+#vera-app.work-mode .vera-wm-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+}
+
+#vera-app.work-mode .vera-wm-music-pane,
+#vera-app.work-mode .vera-wm-checklist-pane {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(6, 10, 18, 0.55);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="split"] #vera-wm-music-pane,
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="split"] #vera-wm-checklist-pane {
+  flex: 1 1 50%;
+}
+
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="music-full"] #vera-wm-music-pane {
+  flex: 1 1 auto;
+}
+
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="music-full"] #vera-wm-checklist-pane {
+  flex: 0 0 auto;
+}
+
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="music-full"] #vera-wm-checklist-pane .vera-wm-checklist-pane-body {
+  display: none !important;
+}
+
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="checklist-full"] #vera-wm-checklist-pane {
+  flex: 1 1 auto;
+}
+
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="checklist-full"] #vera-wm-music-pane {
+  flex: 0 0 auto;
+}
+
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="checklist-full"] #vera-wm-music-body {
+  display: none !important;
+}
+
+#vera-app.work-mode .vera-wm-pane-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#vera-app.work-mode .vera-wm-pane-head .vera-wm-pane-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+#vera-app.work-mode .vera-wm-pane-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+#vera-app.work-mode .vera-wm-pane-btn {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#vera-app.work-mode .vera-wm-pane-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+#vera-app.work-mode .vera-wm-checklist-pane-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Split: + and − on both panes */
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="split"] .vera-wm-pane-expand,
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="split"] .vera-wm-pane-collapse {
+  display: inline-flex;
+}
+
+/* Music full: music − only; checklist + only */
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="music-full"] #vera-wm-music-pane .vera-wm-pane-collapse,
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="music-full"] #vera-wm-checklist-pane .vera-wm-pane-expand {
+  display: inline-flex;
+}
+
+/* Checklist full: checklist − only; music + only */
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="checklist-full"] #vera-wm-checklist-pane .vera-wm-pane-collapse,
+#vera-app.work-mode #vera-wm-left[data-wm-left-layout="checklist-full"] #vera-wm-music-pane .vera-wm-pane-expand {
+  display: inline-flex;
+}
+
+/* Ongoing: full height when there are no completed items; else 75% vs completed 25% */
+#vera-app.work-mode .vera-wm-checklist-group--ongoing {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+#vera-app.work-mode #vera-wm-checklist-pane:not(.vera-wm-checklist-pane--ongoing-only) .vera-wm-checklist-group--ongoing {
+  flex: 75 1 0%;
+}
+
+#vera-app.work-mode .vera-wm-checklist-group--completed {
+  display: flex;
+  flex-direction: column;
+  flex: 25 1 0%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Author flex rules can win over [hidden] in some cases — force-remove from layout when empty */
+#vera-app.work-mode #vera-wm-checklist-completed-section[hidden],
+#vera-app.work-mode #vera-wm-checklist-completed-section.vera-wm-checklist-completed-section--empty {
+  display: none !important;
+  flex: 0 0 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: none !important;
+}
+
+#vera-app.work-mode #vera-wm-checklist-pane:not(.vera-wm-checklist-pane--ongoing-only).vera-wm-checklist-pane--completed-collapsed .vera-wm-checklist-group--ongoing {
+  flex: 1 1 auto;
+}
+
+#vera-app.work-mode #vera-wm-checklist-pane:not(.vera-wm-checklist-pane--ongoing-only).vera-wm-checklist-pane--completed-collapsed .vera-wm-checklist-group--completed {
+  flex: 0 0 auto;
+}
+
+#vera-app.work-mode .vera-wm-checklist-completed-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 6px 10px 6px;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.54);
+  text-align: left;
+  cursor: pointer;
+}
+
+#vera-app.work-mode .vera-wm-checklist-completed-head:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.68);
+}
+
+#vera-app.work-mode .vera-wm-checklist-completed-head:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+#vera-app.work-mode .vera-wm-checklist-completed-chevron {
+  display: inline-block;
+  font-size: 8px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.45);
+  transform: rotate(0deg);
+  transition: transform 0.15s ease;
+}
+
+#vera-app.work-mode
+  #vera-wm-checklist-pane:not(.vera-wm-checklist-pane--ongoing-only).vera-wm-checklist-pane--completed-collapsed
+  .vera-wm-checklist-completed-chevron {
+  transform: rotate(-90deg);
+}
+
+#vera-app.work-mode .vera-wm-checklist-completed-label {
+  letter-spacing: 0.13em;
+}
+
+#vera-app.work-mode .vera-wm-checklist-completed-count {
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+#vera-app.work-mode .vera-wm-checklist-completed-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#vera-app.work-mode
+  #vera-wm-checklist-pane:not(.vera-wm-checklist-pane--ongoing-only).vera-wm-checklist-pane--completed-collapsed
+  .vera-wm-checklist-completed-body {
+  flex: 0 0 0;
+  max-height: 0;
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#vera-app.work-mode .vera-wm-checklist-completed-body .vera-wm-checklist-ul {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+#vera-app.work-mode .vera-wm-right > .vera-wm-pane-title {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#vera-app.work-mode .vera-wm-center > .vera-wm-reasoning-top {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#vera-app.work-mode .vera-wm-center > .vera-wm-reasoning-top .vera-wm-pane-title {
+  margin: 0;
+  padding: 0;
+  border: none;
+  flex: 0 1 auto;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+#vera-app.work-mode .vera-reasoning-tabs-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+#vera-app.work-mode .vera-reasoning-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: min(360px, 55vw);
+}
+
+#vera-app.work-mode .vera-reasoning-tab-add {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#vera-app.work-mode .vera-reasoning-tab-add[hidden] {
+  display: none !important;
+}
+
+#vera-app.work-mode .vera-reasoning-tab-slot {
+  display: inline-flex;
+  align-items: stretch;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+#vera-app.work-mode .vera-reasoning-tab-slot.is-active {
+  border-color: rgba(120, 175, 255, 0.45);
+  background: rgba(80, 140, 240, 0.2);
+}
+
+#vera-app.work-mode .vera-reasoning-tab-slot .vera-reasoning-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 192px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(230, 235, 245, 0.85);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+#vera-app.work-mode .vera-reasoning-tab-slot.is-active .vera-reasoning-tab {
+  color: rgba(230, 240, 255, 0.98);
+}
+
+#vera-app.work-mode .vera-reasoning-tab-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#vera-app.work-mode .vera-reasoning-tab-slot .vera-reasoning-tab-close {
+  flex: 0 0 auto;
+  width: 26px;
+  min-height: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#vera-app.work-mode .vera-reasoning-tab-slot .vera-reasoning-tab-close:hover {
+  color: rgba(255, 210, 210, 0.98);
+  background: rgba(255, 80, 80, 0.15);
+}
+
+#vera-app.work-mode .vera-reasoning-tab-panels {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+#vera-app.work-mode .vera-reasoning-tab-panel {
+  display: none;
+  flex: 1 1 auto;
+  min-height: 0;
+  flex-direction: column;
+}
+
+#vera-app.work-mode .vera-reasoning-tab-panel.is-active {
+  display: flex;
+}
+
+#vera-app.work-mode .vera-reasoning-tab-panel .vera-reasoning-scroll {
+  min-height: 0;
+}
+
+#vera-app.work-mode .vera-reasoning-turn-sep {
+  padding: 10px 0 6px;
+}
+
+#vera-app.work-mode .vera-reasoning-turn-hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0;
+}
+
+#vera-app.work-mode .vera-reasoning-turn {
+  margin-bottom: 14px;
+}
+
+#vera-app.work-mode .vera-reasoning-turn:last-child {
+  margin-bottom: 0;
+}
+
+#vera-app.work-mode .vera-wm-music-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 8px;
+}
+
+#vera-app.work-mode #vera-side-pane {
+  position: relative !important;
+  right: auto !important;
+  top: auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+#vera-app.work-mode .vera-wm-music-body .side-pane-close {
+  display: none !important;
+}
+
+#vera-app.work-mode .vera-wm-checklist-ul {
+  flex: 1 1 auto;
+  margin: 0;
+  padding: 8px 10px 6px;
+  list-style: none;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+#vera-app.work-mode .vera-wm-checklist-ongoing-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ongoing list scrolls; trailing empty row lives in the <ul> */
+#vera-app.work-mode .vera-wm-checklist-ongoing-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#vera-app.work-mode .vera-wm-checklist-ongoing-scroll > #vera-wm-checklist-ongoing {
+  overflow: visible;
+  flex: 0 0 auto;
+}
+
+#vera-app.work-mode .vera-wm-checklist-group {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+#vera-app.work-mode .vera-wm-checklist-subtitle {
+  padding: 6px 10px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.54);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+#vera-app.work-mode .vera-wm-checklist-ongoing-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 10px 5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+#vera-app.work-mode .vera-wm-checklist-subtitle--ongoing {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+#vera-app.work-mode .vera-wm-checklist-help-plan-btn {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(140, 200, 255, 0.32);
+  background: rgba(55, 110, 200, 0.2);
+  color: rgba(235, 245, 255, 0.92);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+#vera-app.work-mode .vera-wm-checklist-help-plan-btn:hover:not(:disabled) {
+  border-color: rgba(170, 215, 255, 0.48);
+  background: rgba(70, 130, 220, 0.3);
+}
+
+#vera-app.work-mode .vera-wm-checklist-help-plan-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+#vera-app.work-mode .vera-wm-checklist-plan-hint {
+  display: block;
+  flex: 0 0 auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 0 10px 6px;
+  font-size: 10px;
+  line-height: 1.35;
+  color: rgba(255, 200, 120, 0.85);
+}
+
+#vera-app.work-mode .vera-wm-checklist-li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0 6px calc(var(--checklist-depth, 0) * 16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+#vera-app.work-mode .vera-wm-checklist-li.vera-wm-checklist-dragging {
+  opacity: 0.45;
+}
+
+#vera-app.work-mode .vera-wm-checklist-li.vera-wm-checklist-li-exiting {
+  opacity: 0;
+  filter: blur(3px);
+  transition:
+    opacity 0.28s ease-in-out,
+    filter 0.28s ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes vera-wm-checklist-li-enter {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+#vera-app.work-mode #vera-wm-checklist-completed .vera-wm-checklist-li-entering,
+#vera-app.work-mode #vera-wm-checklist-ongoing .vera-wm-checklist-li-entering {
+  animation: vera-wm-checklist-li-enter 0.38s ease-in-out both;
+}
+
+#vera-app.work-mode .vera-wm-checklist-li.is-done {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+#vera-app.work-mode .vera-wm-checklist-li.is-done .vera-wm-checklist-task-text {
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: rgba(255, 255, 255, 0.5);
+}
+
+#vera-app.work-mode .vera-wm-checklist-drag-handle {
+  flex: 0 0 auto;
+  cursor: grab;
+  padding: 2px 4px 2px 0;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#vera-app.work-mode .vera-wm-checklist-drag-handle:active {
+  cursor: grabbing;
+}
+
+#vera-app.work-mode .vera-wm-checklist-drag-dots {
+  display: grid;
+  grid-template-columns: 3px 3px;
+  grid-auto-rows: 3px;
+  gap: 3px 4px;
+  margin-top: 1px;
+}
+
+#vera-app.work-mode .vera-wm-checklist-drag-dots span {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+#vera-app.work-mode .vera-wm-checklist-cb {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.48);
+  border-radius: 2px;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+#vera-app.work-mode .vera-wm-checklist-cb:hover {
+  border-color: rgba(255, 255, 255, 0.62);
+}
+
+#vera-app.work-mode .vera-wm-checklist-cb:checked {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.58);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12' fill='none'%3E%3Cpath stroke='%23e8eaed' stroke-width='1.65' stroke-linecap='round' stroke-linejoin='round' d='M2.5 6.2 5.8 9.5 11.5 2.5'/%3E%3C/svg%3E");
+  background-size: 11px 9px;
+  background-position: 50% 45%;
+  background-repeat: no-repeat;
+}
+
+#vera-app.work-mode .vera-wm-checklist-cb:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
+}
+
+#vera-app.work-mode .vera-wm-checklist-task-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+#vera-app.work-mode .vera-wm-checklist-li-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding-left: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+
+#vera-app.work-mode .vera-wm-checklist-li:hover .vera-wm-checklist-li-actions,
+#vera-app.work-mode .vera-wm-checklist-li:focus-within .vera-wm-checklist-li-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: none) {
+  #vera-app.work-mode .vera-wm-checklist-li-actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+#vera-app.work-mode .vera-wm-checklist-action {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+#vera-app.work-mode .vera-wm-checklist-action-del {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+#vera-app.work-mode .vera-wm-checklist-action-del:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+#vera-app.work-mode .vera-wm-checklist-task-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.88);
+  font: inherit;
+  line-height: 1.35;
+}
+
+#vera-app.work-mode .vera-wm-checklist-task-input::placeholder {
+  color: rgba(255, 255, 255, 0.38);
+}
+
+#vera-app.work-mode .vera-wm-checklist-task-input:focus {
+  outline: none;
+}
+
+#vera-app.work-mode .vera-wm-center {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(5, 10, 18, 0.72);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+
+#vera-app.work-mode .vera-reasoning-scroll {
+  flex: 1 1 auto;
+  min-height: 120px;
+  overflow: auto;
+  padding: 12px 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(230, 235, 245, 0.95);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#vera-app.work-mode .vera-reasoning-summary-line {
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(180, 210, 255, 0.88);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+#vera-app.work-mode .vera-reasoning-compose {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+#vera-app.work-mode .vera-reasoning-file-input {
+  display: none;
+}
+
+#vera-app.work-mode .vera-reasoning-attach-btn {
+  flex: 0 0 auto;
+  width: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#vera-app.work-mode .vera-reasoning-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(5, 8, 14, 0.75);
+  color: rgba(255, 255, 255, 0.94);
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+#vera-app.work-mode .vera-reasoning-send {
+  border-radius: 8px;
+  border: 1px solid rgba(100, 180, 255, 0.45);
+  background: rgba(60, 130, 220, 0.25);
+  color: rgba(255, 255, 255, 0.95);
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+#vera-app.work-mode .vera-reasoning-compose-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#vera-app.work-mode .vera-reasoning-cancel {
+  border-radius: 8px;
+  border: 1px solid rgba(255, 130, 130, 0.45);
+  background: rgba(200, 70, 70, 0.2);
+  color: rgba(255, 255, 255, 0.95);
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+#vera-app.work-mode .vera-reasoning-cancel[hidden] {
+  display: none;
+}
+
+#vera-app.work-mode .vera-reasoning-attach-meta {
+  min-height: 16px;
+  padding: 0 12px 8px;
+  font-size: 11px;
+  color: rgba(180, 210, 255, 0.72);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#vera-app.work-mode .vera-reasoning-typed-note {
+  margin: 0;
+  padding: 0 12px 10px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(200, 215, 235, 0.45);
+}
+
+#vera-app:not(.work-mode) .vera-reasoning-typed-note {
+  display: none;
+}
+
+#vera-app.work-mode .vera-wm-right {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(4, 8, 14, 0.35);
+}
+
+#vera-app.work-mode .vera-wm-right > .vera-wm-pane-title {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#vera-app.work-mode .vera-wm-right .chat-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: none;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 8px 10px 0;
+}
+
+#vera-app.work-mode .vera-wm-right .conversation {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 12px !important;
+}
+
+#vera-app.work-mode .vera-wm-right .input-container {
+  flex: 0 0 auto;
+  position: static !important;
+  inset: auto !important;
+  pointer-events: auto !important;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 10px 52px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+#vera-app.work-mode .vera-wm-right .startup-text {
+  display: none !important;
+}
+
+#vera-app.work-mode .vera-wm-right .input-bar,
+#vera-app.work-mode .vera-wm-right #vera-keyboard-bar {
+  width: 100%;
+  max-width: none;
+  border-radius: 16px;
+  padding: 9px 12px;
+}
+
+#vera-app.work-mode .vera-wm-right .input-toggle-btn {
+  display: none !important;
+}
+
+#vera-app.work-mode .vera-wm-right #vera-keyboard-bar {
+  display: none !important;
+}
+
+#vera-app.work-mode .vera-wm-right #vera-voice-bar {
+  display: flex !important;
+}
+
+#vera-app.work-mode .vera-bottom-right-tools {
+  z-index: 1400;
+  right: 28px;
+  bottom: 24px;
+}
+
+#vera-app.work-mode .vera-bottom-left-tools {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  #vera-work-mode {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  #vera-app.work-mode .vera-body-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+  }
+  #vera-app.work-mode .vera-wm-left {
+    flex-direction: row;
+  }
+  #vera-app.work-mode #vera-wm-left[data-wm-left-layout="split"] #vera-wm-music-pane,
+  #vera-app.work-mode #vera-wm-left[data-wm-left-layout="split"] #vera-wm-checklist-pane {
+    flex: 1 1 50%;
+  }
+
+  #vera-app.work-mode #vera-wm-left[data-wm-left-layout="music-full"] #vera-wm-music-pane {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  #vera-app.work-mode #vera-wm-left[data-wm-left-layout="music-full"] #vera-wm-checklist-pane {
+    flex: 0 0 auto;
+    min-height: 0;
+  }
+
+  #vera-app.work-mode #vera-wm-left[data-wm-left-layout="checklist-full"] #vera-wm-checklist-pane {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  #vera-app.work-mode #vera-wm-left[data-wm-left-layout="checklist-full"] #vera-wm-music-pane {
+    flex: 0 0 auto;
+    min-height: 0;
+  }
+}
+
+.vera-sign-in-nav {
+  white-space: nowrap;
+}
+
+/* Header "SIGN IN" — gray, slightly smaller than BMO / nav-logo */
+#vera-user-sign-in {
+  font-size: clamp(20px, 2.6vw, 24px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(200, 204, 210, 0.88);
+  opacity: 0.92;
+}
+
+#vera-user-sign-in:hover {
+  color: rgba(220, 224, 230, 0.98);
+  opacity: 1;
+}
+
+/* Long-press (VERA app only): letter opacity fills left → right */
+#return-home-vera {
+  position: relative;
+  --vera-hold-pct: 0%;
+}
+
+#return-home-vera .vera-logo-text-stack {
+  position: relative;
+  display: inline-block;
+}
+
+#return-home-vera .vera-logo-dim {
+  opacity: 0.38;
+}
+
+#return-home-vera .vera-logo-sweep {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  width: var(--vera-hold-pct, 0%);
+  pointer-events: none;
+}
+
+#return-home-vera .vera-logo-solid {
+  display: block;
+  opacity: 1;
+  white-space: nowrap;
+}
+
+.vera-user-sign-in-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.vera-user-sign-in-overlay[hidden] {
+  display: none !important;
+}
+
+.vera-settings-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20010;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 26px;
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(4px);
+}
+
+.vera-settings-modal[hidden] {
+  display: none !important;
+}
+
+.vera-settings-card {
+  width: min(920px, 94vw);
+  max-height: min(86vh, 820px);
+  overflow: auto;
+  padding: 24px 26px 18px;
+  border-radius: 14px;
+  background: #12141a;
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 58px rgba(0, 0, 0, 0.46);
+}
+
+.vera-settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.vera-settings-header h2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+}
+
+.vera-settings-close {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 8px;
+  min-width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+
+.vera-settings-section {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  padding: 14px 14px 10px;
+  margin-bottom: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.vera-settings-section h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.vera-settings-row {
+  margin-bottom: 12px;
+}
+
+.vera-settings-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+#vera-setting-silence {
+  width: min(560px, 100%);
+  accent-color: #8cb6ff;
+}
+
+#vera-setting-main-partial-min {
+  width: min(560px, 100%);
+  accent-color: #8cb6ff;
+}
+
+.vera-settings-range-labels {
+  width: min(560px, 100%);
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  opacity: 0.72;
+}
+
+.vera-settings-row select {
+  width: min(560px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  padding: 9px 10px;
+  font-size: 13px;
+}
+
+.vera-settings-radio-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.vera-settings-radio {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.vera-settings-radio .dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: transparent;
+}
+
+.vera-settings-radio.is-active {
+  border-color: rgba(140, 182, 255, 0.75);
+  background: rgba(140, 182, 255, 0.18);
+}
+
+.vera-settings-radio.is-active .dot {
+  background: rgba(170, 205, 255, 0.95);
+  border-color: rgba(170, 205, 255, 0.95);
+}
+
+.vera-settings-danger-btn {
+  border: 1px solid rgba(255, 98, 98, 0.6);
+  background: rgba(255, 98, 98, 0.16);
+  color: rgba(255, 223, 223, 0.96);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.vera-settings-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.vera-settings-toggle {
+  position: relative;
+  width: 56px;
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  cursor: pointer;
+}
+
+.vera-settings-toggle .knob {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f2f5fb;
+  left: 2px;
+  top: 2px;
+  transition: transform 0.2s ease;
+}
+
+.vera-settings-toggle.is-on {
+  background: rgba(82, 190, 130, 0.44);
+  border-color: rgba(112, 220, 152, 0.62);
+}
+
+.vera-settings-toggle.is-on .knob {
+  transform: translateX(26px);
+}
+
+.vera-settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.vera-settings-save-btn {
+  border: 1px solid rgba(118, 205, 158, 0.65);
+  background: rgba(82, 190, 130, 0.24);
+  color: rgba(228, 255, 239, 0.96);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.vera-settings-save-btn:hover {
+  background: rgba(82, 190, 130, 0.34);
+}
+
+.vera-user-sign-in-dialog {
+  width: 100%;
+  max-width: 400px;
+  padding: 24px 28px;
+  border-radius: 12px;
+  background: #12141a;
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+}
+
+.vera-user-sign-in-dialog h2 {
+  margin: 0 0 18px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.vera-sign-in-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.vera-sign-in-label input {
+  padding: 10px 12px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+}
+
+.vera-sign-in-error {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #ff6b6b;
+}
+
+.vera-sign-in-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.vera-sign-in-actions button {
+  padding: 10px 16px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+#vera-sign-in-submit {
+  background: #3d9cff;
+  color: #0a0c10;
+  font-weight: 600;
+}
+
+#vera-sign-in-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.chat-logo {
+  background: none;
+  border: none;
+
+  font-size: 18px;          /* match main page */
+  font-weight: 500;         /* stronger presence */
+  letter-spacing: 0.32em;   /* tighter + cleaner */
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,0.9);  /* brighter like homepage */
+
+  cursor: pointer;
+  padding: 0;
+
+  transition: opacity 0.3s ease;
+}
+
+.chat-logo:hover {
+  opacity: 0.75;
+}
+
+.chat-centered {
+  height: 100vh;
+  overflow-y: auto;   /* 🔥 MOVE SCROLL HERE */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-top: 60px;
+}
+
+.chat-main {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  justify-content: center;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+body.news-panel-open .chat-main {
+  width: 100%;
+  max-width: 760px;
+  justify-content: center;
+  margin-right: 0;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.wave-container {
+  flex: 1;
+  position: relative;
+  height: 60px;   /* 🔥 FIX */
+  margin: 0 12px;
+}
+
+#waveform,
+#vera-waveform,
+#bmo-waveform {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+
+/* =========================
+   CHAT
+========================= */
+.conversation {
+  width: 100%;
+  max-width: 760px;
+  flex: 1 1 auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  padding: 20px 0 200px; /* 🔥 increase this */
+}
+
+body.news-panel-open .conversation {
+  max-width: 760px;
+}
+
+.side-pane[hidden] {
+  display: none !important;
+}
+
+.side-pane {
+  /* Fluid layout: width / inset / padding track browser size (hidden ≤768px elsewhere). */
+  width: min(
+    clamp(260px, calc(24vw + 48px), 420px),
+    calc(100vw - 16px)
+  );
+  max-height: calc(100vh - clamp(90px, 10vh + 44px, 126px));
+  position: fixed;
+  right: clamp(8px, 2vw, 24px);
+  top: clamp(72px, 10vh, 88px);
+  overflow-y: auto;
+  padding: clamp(11px, 1.2vw, 18px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: clamp(14px, 1.4vw, 18px);
+  background: rgba(8, 14, 24, 0.72);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 18px 36px rgba(0,0,0,0.28);
+  z-index: 950;
+  opacity: 0;
+  transform: translateX(clamp(12px, 2vw, 28px));
+  pointer-events: none;
+  transition:
+    opacity 0.78s ease,
+    transform 0.84s ease;
+}
+
+.side-pane.visible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* Flow mode: dissolve when swapping music panel ↔ news/finance (innerHTML replace) */
+.side-pane.visible.side-pane-swap-hiding {
+  opacity: 0;
+  filter: blur(6px);
+  pointer-events: none;
+  transition:
+    opacity 0.32s ease-in-out,
+    filter 0.32s ease-in-out !important;
+}
+
+@keyframes side-pane-content-swap-in {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.side-pane.visible.side-pane-swap-in {
+  animation: side-pane-content-swap-in 0.38s ease-in-out both;
+}
+
+.side-pane-title {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #f5f7fb;
+}
+
+.side-pane-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.side-pane-heading {
+  min-width: 0;
+}
+
+.side-pane-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.side-pane-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.side-pane-tab {
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255,255,255,0.62);
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.side-pane-tab:hover {
+  color: rgba(255,255,255,0.92);
+}
+
+.side-pane-tab.active {
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+}
+
+.side-pane-subtitle {
+  margin: -8px 0 16px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.58);
+}
+
+.side-pane-tab-panel {
+  display: none;
+}
+
+.side-pane-tab-panel.active {
+  display: block;
+}
+
+.side-pane-empty {
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.72);
+  line-height: 1.5;
+}
+
+.side-pane-close {
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.8);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.side-pane-close:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border-color: rgba(255,255,255,0.16);
+}
+
+.news-result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.news-result-card {
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.news-result-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f4f7fb;
+}
+
+.news-result-snippet {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255,255,255,0.76);
+}
+
+.news-result-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+}
+
+.news-result-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #89b4ff;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.news-result-link:hover {
+  text-decoration: underline;
+}
+
+.media-grid,
+.video-result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.media-card {
+  overflow: hidden;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.media-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.media-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: rgba(255,255,255,0.03);
+}
+
+.media-card-body {
+  padding: 12px 14px 14px;
+}
+
+.media-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f4f7fb;
+  margin-bottom: 8px;
+}
+
+.media-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+}
+
+.video-embed-wrap,
+.finance-chart-wrap {
+  border-radius: 14px;
+  overflow: hidden;
+  background: #05080e;
+}
+
+.video-embed {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+
+.finance-chart-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.finance-chart-frame {
+  display: block;
+  width: 100%;
+  height: 520px;
+  border: 0;
+  background: #05080e;
+}
+
+/* 🔥 Only when chat has started (VERA-style dark UI). BMO uses a flat mint screen — no bottom fade. */
+body.chat-started .chat-centered::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 180px; /* match input zone height */
+
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(5, 10, 18, 0.9) 40%,
+    rgba(5, 10, 18, 1) 100%
+  );
+
+  pointer-events: none;
+  z-index: 900; /* below input (1000), above messages */
+}
+
+body.bmo-open.chat-started .chat-centered::after,
+body.bmo-open .chat-centered::after {
+  content: none;
+  display: none;
+}
+.chat-centered::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-centered::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-centered::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.12);
+  border-radius: 10px;
+}
+
+.chat-centered::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* Firefox */
+.chat-centered {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.18) transparent;
+}
+/* =========================
+   BOTTOM FADE MASK
+========================= */
+
+body.chat-started .input-container {
+  z-index: 1000;
+}
+
+body.news-panel-open .input-container {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+body.news-panel-open .input-bar {
+  width: 100%;
+  max-width: 760px;
+}
+
+body.app-open {
+  overflow: hidden;
 }
 
 /* One row per message */
@@ -1133,7 +5149,28 @@ body.vera-mode {
   justify-content: flex-end;
 }
 
-/* Chat bubbles */
+/* Chat bubbles — one-shot enter on new DOM nodes; streaming only mutates textContent inside. */
+@keyframes chat-bubble-enter {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes chat-bubble-interrupt-preview-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 0.62;
+    transform: none;
+  }
+}
 
 .bubble {
   display: inline-block;      /* 🔑 shrink to content */
@@ -1149,10 +5186,27 @@ body.vera-mode {
   white-space: pre-wrap;
 }
 
+.bubble:not(.interrupt-preview) {
+  animation: chat-bubble-enter 0.34s ease-out both;
+}
+
 
 /* USER — LEFT */
 .bubble.user {
   background: #1e2a36;
+}
+
+/* Live interrupt preview (browser ASR while assistant TTS is playing) */
+.bubble.user.interrupt-preview {
+  opacity: 0.62;
+  background: rgba(30, 42, 54, 0.78);
+  animation: chat-bubble-interrupt-preview-enter 0.28s ease-out both;
+}
+
+body.bmo-open .bubble.user.interrupt-preview {
+  background: rgba(255, 255, 255, 0.42);
+  color: #142822;
+  border: 1px solid rgba(24, 49, 39, 0.12);
 }
 
 /* VERA — RIGHT */
@@ -1164,24 +5218,12 @@ body.vera-mode {
    INPUT BAR
 ========================= */
 
-.input-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  padding: 14px;
-  padding-bottom: calc(14px + env(safe-area-inset-bottom)); /* 🔑 */
-
-  border-top: 1px solid rgba(255,255,255,0.08);
-  background: rgba(0,0,0,0.25);
-  backdrop-filter: blur(8px);
-
-  position: sticky;
-  bottom: 0;
-}
 
 
-#record {
+
+#record,
+#vera-record,
+#bmo-record {
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -1192,9 +5234,35 @@ body.vera-mode {
   cursor: pointer;
 }
 
+#record.muted,
+#vera-record.muted,
+#bmo-record.muted {
+  background: rgba(255, 88, 88, 0.18);
+  color: #ffb3b3;
+}
+
 .status {
   font-size: 14px;
   opacity: 0.85;
+}
+
+.thinking-dots {
+  display: inline-flex;
+  margin-left: 2px;
+}
+
+.thinking-dots span {
+  display: inline-block;
+  min-width: 0.35em;
+  animation: thinking-dot-bounce 0.9s infinite ease-in-out;
+}
+
+.thinking-dots span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.thinking-dots span:nth-child(3) {
+  animation-delay: 0.24s;
 }
 
 .recording { color: #ff6b6b; }
@@ -1208,6 +5276,122 @@ body.vera-mode {
   opacity: 0.9;
 }
 
+@keyframes thinking-dot-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  30% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+.vera-guide {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  opacity: 0;
+  transition: opacity 0.35s ease;
+
+  pointer-events: none;
+}
+
+.vera-guide.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.chat-started .vera-guide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.guide-item {
+  position: absolute;
+  color: white;
+  font-size: 14px;
+  max-width: 220px;
+
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+
+.vera-guide.show .guide-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.guide-text {
+  background: none;
+  border: none;
+  padding: 0;
+
+  color: rgba(255,255,255,0.3);  
+
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 220px;
+}
+
+.guide-arrow {
+  font-size: 20px;
+  opacity: 0.35;
+}
+
+.arrow-left {
+  animation: floatLeft 2s ease-in-out infinite;
+}
+
+.arrow-up {
+  animation: floatUp 2s ease-in-out infinite;
+}
+
+@keyframes floatLeft {
+  0% { transform: translateX(0); opacity: 0.35; }
+  50% { transform: translateX(-8px); opacity: 0.75; }
+  100% { transform: translateX(0); opacity: 0.35; }
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 0.35; }
+  50% { transform: translateY(-8px); opacity: 0.75; }
+  100% { transform: translateY(0); opacity: 0.35; }
+}
+/* positions */
+
+.guide-vera {
+  top: 20px;
+  left: 135px;
+}
+
+.guide-headset {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.guide-ptt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.guide-headset .guide-text {
+  margin-top: 6px;
+  text-align: center;
+}
+
+.guide-ptt .guide-text {
+  margin-top: 6px;
+  text-align: center;
+}
+
+.guide-vera .guide-text {
+  transform: translate(29px, -25px);
+}
 /* =========================
    MOBILE
 ========================= */
@@ -1223,12 +5407,17 @@ body.vera-mode {
     gap: 16px;
   }
 
-  .nav-right .nav-link:not(.music-toggle) {
-    display: none; /* hide text links */
+  .nav-right .nav-link {
+    display: none; /* hide nav links including MUSIC on small screens */
   }
 
   .hamburger {
     display: flex; /* show triple-line menu */
+  }
+
+  /* Floating Music / productivity — hidden on phone (no room + avoids overlap) */
+  .productivity-mode-btn {
+    display: none;
   }
 
   /* 🔑 REST OF YOUR EXISTING MOBILE STYLES */
@@ -1292,13 +5481,86 @@ body.vera-mode {
     transform: none !important;
     filter: none !important;
   }
-  #server-status-inline {
+
+  body.vad-log-mode.chat-started .input-container {
+    flex-wrap: wrap;
+    align-content: flex-end;
+    align-items: flex-end;
+    row-gap: 6px;
+  }
+  body.vad-log-mode .interrupt-debug-extender {
+    display: block;
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: min(760px, 100%);
+    margin-top: 0;
+    padding: 0 8px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  body.vad-log-mode .interrupt-debug-header-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.35);
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  body.vad-log-mode .interrupt-debug-toggle {
+    display: inline-block;
+    padding: 6px 10px;
+    font-size: 11px;
+    opacity: 0.85;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: inherit;
+    cursor: pointer;
+  }
+  body.vad-log-mode .interrupt-debug-panel {
+    margin-top: 6px;
+  }
+  body.vad-log-mode .interrupt-debug-pre {
+    display: block;
+    max-height: 38vh;
+    overflow: auto;
+    font-size: 10px;
+    line-height: 1.35;
+    margin: 0;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 6px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: ui-monospace, monospace;
+  }
+  body.vad-log-mode .interrupt-debug-clear {
+    margin-top: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    opacity: 0.9;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  #server-status-inline,
+  #vera-server-status-inline,
+  #bmo-server-status-inline {
     display: none;
   }
-  #server-status-inline.offline {
+  #server-status-inline.offline,
+  #vera-server-status-inline.offline,
+  #bmo-server-status-inline.offline {
     display: inline;
   }
-  #server-status-inline {
+  #server-status-inline,
+  #vera-server-status-inline,
+  #bmo-server-status-inline {
     position: static;
     margin-left: auto;
     font-size: 11px;
@@ -1306,16 +5568,567 @@ body.vera-mode {
     pointer-events: none;
   }
   #text-input,
-  #send-text {
+  #vera-text-input,
+  #bmo-text-input,
+  #send-text,
+  #vera-send-text,
+  #bmo-send-text {
     display: none;
   }
-  #ptt {
+  #ptt,
+  #vera-ptt,
+  #bmo-ptt {
     display: flex;
     margin-left: auto;
   }
 
   /* show PTT ONLY when server is online */
-  body.server-online #ptt {
+  body.server-online #ptt,
+  body.server-online #vera-ptt,
+  body.server-online #bmo-ptt {
     display: flex;
   }
+  .startup-text {
+    white-space: nowrap;
+    font-size: clamp(13px, 4vw, 16px);
+    top: calc(50% - 90px);
+  }
+  .input-container {
+    padding: 8px 12px;
+  }
+
+  /* 🔹 Shrink the input bar */
+  .input-bar {
+    height: 44px;           /* was likely ~56-60px */
+    padding: 0 8px;
+    border-radius: 14px;
+  }
+
+  /* 🔹 Text input smaller */
+  #text-input,
+  #vera-text-input,
+  #bmo-text-input {
+    font-size: 14px;
+  }
+
+  /* 🔹 Buttons smaller */
+  #record,
+  #vera-record,
+  #bmo-record,
+  #ptt,
+  #vera-ptt,
+  #bmo-ptt,
+  #send-text,
+  #vera-send-text,
+  #bmo-send-text {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+  #keyboard-bar,
+  #vera-keyboard-bar,
+  #bmo-keyboard-bar {
+    display: none !important;
+  }
+
+  /* 🔒 Hide toggle button */
+  .input-toggle-btn {
+    display: none !important;
+  }
+  /* 🔹 Mic status spacing tighter */
+  .mic-status {
+    gap: 6px;
+  }
+
+  /* 🔹 Status text slightly smaller */
+  .status {
+    font-size: 12px;
+  }
+  .chat-main {
+    padding: 0 12px;
+  }
+  .side-pane {
+    display: none !important;
+  }
+  .vera-guide {
+    display: none !important;
+  }
+}
+
+/* =========================
+   BMO + VERA pipeline (mint screen)
+========================= */
+
+body.bmo-open .input-bar {
+  background: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(24, 49, 39, 0.14);
+  backdrop-filter: blur(14px);
+}
+
+body.bmo-open .startup-text {
+  color: rgba(24, 49, 39, 0.88);
+}
+
+body.bmo-open .chat-logo,
+body.bmo-open .nav-logo.bmo-home-btn {
+  color: rgba(24, 49, 39, 0.92);
+}
+
+body.bmo-open .bubble.user {
+  background: rgba(255, 255, 255, 0.55);
+  color: #142822;
+  border: 1px solid rgba(24, 49, 39, 0.1);
+}
+
+body.bmo-open .bubble.vera {
+  background: rgba(32, 88, 62, 0.22);
+  color: #142822;
+  border: 1px solid rgba(24, 49, 39, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble:not(.interrupt-preview),
+  .bubble.user.interrupt-preview {
+    animation: none;
+  }
+}
+
+body.bmo-open #bmo-record {
+  background: rgba(255, 255, 255, 0.5);
+  color: #142822;
+  border: 1px solid rgba(24, 49, 39, 0.12);
+}
+
+body.bmo-open #bmo-record.muted {
+  background: rgba(255, 120, 120, 0.2);
+  color: #6b1c1c;
+}
+
+body.bmo-open .status {
+  color: rgba(24, 49, 39, 0.82);
+}
+
+body.bmo-open .recording {
+  color: #8b2c2c;
+}
+body.bmo-open .thinking {
+  color: #6a4a0a;
+}
+body.bmo-open .speaking {
+  color: #1a6b4a;
+}
+body.bmo-open .idle {
+  color: rgba(24, 49, 39, 0.55);
+}
+
+body.bmo-open .side-pane {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(24, 49, 39, 0.12);
+  color: #142822;
+  box-shadow: 0 14px 32px rgba(20, 40, 30, 0.12);
+}
+
+/* BMO mint UI: side pane children still used VERA’s light text — fix contrast (dark green). */
+body.bmo-open .side-pane-title {
+  color: #0f2e22;
+}
+
+body.bmo-open .side-pane-subtitle {
+  color: rgba(24, 49, 39, 0.62);
+}
+
+body.bmo-open .side-pane-tabs {
+  background: rgba(24, 49, 39, 0.08);
+  border-color: rgba(24, 49, 39, 0.14);
+}
+
+body.bmo-open .side-pane-tab {
+  color: rgba(24, 49, 39, 0.55);
+}
+
+body.bmo-open .side-pane-tab:hover {
+  color: #0f2e22;
+}
+
+body.bmo-open .side-pane-tab.active {
+  background: rgba(24, 49, 39, 0.14);
+  color: #0a261c;
+}
+
+body.bmo-open .side-pane-empty {
+  background: rgba(255, 255, 255, 0.45);
+  border-color: rgba(24, 49, 39, 0.12);
+  color: rgba(24, 49, 39, 0.82);
+}
+
+body.bmo-open .side-pane-close {
+  border-color: rgba(24, 49, 39, 0.22);
+  background: rgba(255, 255, 255, 0.55);
+  color: #142822;
+}
+
+body.bmo-open .side-pane-close:hover {
+  background: rgba(24, 49, 39, 0.1);
+  color: #0a1f16;
+  border-color: rgba(24, 49, 39, 0.32);
+}
+
+body.bmo-open .spotify-brand,
+body.bmo-open .spotify-track-title,
+body.bmo-open .spotify-result-title {
+  color: #0f2e22 !important;
+}
+
+body.bmo-open .spotify-result-kind {
+  color: #0a3d24;
+  border-color: rgba(24, 49, 39, 0.35);
+  background: rgba(177, 246, 191, 0.65);
+}
+
+body.bmo-open .spotify-search-back {
+  color: #0a5c2e;
+}
+
+body.bmo-open .spotify-search-detail-title {
+  color: #0f2e22;
+}
+
+body.bmo-open .spotify-search-detail-sub {
+  color: rgba(24, 49, 39, 0.78);
+}
+
+body.bmo-open .spotify-album-play-triangle {
+  color: #0f2e22;
+  border-color: rgba(24, 49, 39, 0.28);
+  background: rgba(205, 255, 215, 0.75);
+}
+
+body.bmo-open .spotify-detail-track-row {
+  background: rgba(255, 255, 255, 0.62);
+  border-color: rgba(24, 49, 39, 0.1);
+  color: #132e23;
+}
+
+body.bmo-open .spotify-detail-track-row:hover {
+  background: rgba(199, 237, 208, 0.85);
+  border-color: rgba(24, 49, 39, 0.18);
+}
+
+body.bmo-open .spotify-artist-top-more {
+  color: #142822;
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(24, 49, 39, 0.18);
+}
+
+body.bmo-open .spotify-track-artist,
+body.bmo-open .spotify-time-text,
+body.bmo-open .spotify-results-hint,
+body.bmo-open .spotify-result-sub {
+  color: rgba(24, 49, 39, 0.78);
+}
+
+body.bmo-open .spotify-view-tab,
+body.bmo-open .spotify-transport-btn {
+  color: #142822;
+  border-color: rgba(24, 49, 39, 0.22);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+/* BMO music panel: match chat-log palette (light cards + dark-green text). */
+body.bmo-open .spotify-panel-body {
+  color: #142822;
+}
+
+body.bmo-open .spotify-now-playing {
+  background: rgba(24, 49, 39, 0.22);
+  border-color: rgba(24, 49, 39, 0.14);
+}
+
+body.bmo-open .spotify-connect-link,
+body.bmo-open .spotify-connected-badge,
+body.bmo-open .spotify-volume-icon {
+  color: #0f2e22;
+}
+
+body.bmo-open .spotify-search-input {
+  background: rgba(24, 49, 39, 0.26);
+  border-color: rgba(24, 49, 39, 0.18);
+  color: #142822;
+}
+
+body.bmo-open .spotify-search-input::placeholder {
+  color: rgba(24, 49, 39, 0.6);
+}
+
+body.bmo-open .spotify-search-submit {
+  background: rgba(205, 255, 215, 0.85);
+  border-color: rgba(24, 49, 39, 0.25);
+  color: #123526;
+}
+
+body.bmo-open .spotify-search-submit:hover {
+  background: rgba(177, 246, 191, 0.95);
+}
+
+body.bmo-open .spotify-results {
+  background: rgba(255, 255, 255, 0.36);
+  border: 1px solid rgba(24, 49, 39, 0.1);
+  border-radius: 14px;
+  padding: 6px;
+}
+
+body.bmo-open .spotify-result-row {
+  background: rgba(255, 255, 255, 0.62);
+  border-color: rgba(24, 49, 39, 0.1);
+  color: #132e23;
+}
+
+body.bmo-open .spotify-result-row:hover {
+  background: rgba(199, 237, 208, 0.8);
+  border-color: rgba(24, 49, 39, 0.18);
+}
+
+body.bmo-open .spotify-playlist-row.is-selected {
+  background: rgba(32, 88, 62, 0.45);
+  border-color: rgba(24, 49, 39, 0.35);
+}
+
+body.bmo-open .spotify-playlist-row.is-selected:hover {
+  background: rgba(32, 88, 62, 0.55);
+  border-color: rgba(24, 49, 39, 0.42);
+}
+
+body.bmo-open .news-result-card {
+  background: rgba(255, 255, 255, 0.42);
+  border-color: rgba(24, 49, 39, 0.12);
+}
+
+body.bmo-open .news-result-title {
+  color: #0f2e22;
+}
+
+body.bmo-open .news-result-snippet {
+  color: rgba(18, 52, 36, 0.9);
+}
+
+body.bmo-open .news-result-meta {
+  color: rgba(24, 49, 39, 0.52);
+}
+
+body.bmo-open .news-result-link {
+  color: #0d6b42;
+}
+
+body.bmo-open .news-result-link:hover {
+  color: #095234;
+}
+
+body.bmo-open .media-card {
+  background: rgba(255, 255, 255, 0.42);
+  border-color: rgba(24, 49, 39, 0.12);
+}
+
+body.bmo-open .media-card-title {
+  color: #0f2e22;
+}
+
+body.bmo-open .media-card-meta {
+  color: rgba(24, 49, 39, 0.52);
+}
+
+body.bmo-open .wave-container {
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.28);
+  align-self: center;
+  flex-shrink: 0;
+}
+
+/* Sharp docked bars on BMO (no frosted blur on the pill). */
+body.bmo-open #bmo-page .input-bar {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.bmo-open #bmo-text-input {
+  color: #142822;
+}
+
+body.bmo-open #bmo-text-input::placeholder {
+  color: rgba(24, 49, 39, 0.45);
+}
+
+body.bmo-open #bmo-send-text {
+  color: #0f3d2c;
+  background: rgba(24, 49, 39, 0.1);
+}
+
+body.bmo-open #bmo-send-text:hover {
+  color: #0a2a1f;
+  background: rgba(24, 49, 39, 0.16);
+}
+
+/* BMO: dock pinned to bottom, group centered horizontally; toggle + bar aligned in a row. */
+body.bmo-open #bmo-page .input-container {
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  padding-bottom: 40px;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+body.bmo-open #bmo-page .bmo-input-dock-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  /* Wider pill: fixed row cap so the bar can grow (was max-content → bar stayed narrow). */
+  width: min(900px, calc(100vw - 48px));
+  max-width: calc(100vw - 48px);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+body.bmo-open #bmo-page .bmo-input-dock-row .input-bar {
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+  max-width: none;
+}
+
+body.bmo-open #bmo-page .bmo-input-dock-row > * {
+  pointer-events: auto;
+}
+
+body.bmo-open.news-panel-open #bmo-page .input-container {
+  justify-content: flex-end !important;
+  padding-right: 20px;
+}
+
+/* ----- Work mode UI polish (wrappers + depth + motion; flow layout unchanged) ----- */
+#vera-app:not(.work-mode) .vera-wm-reasoning-body-wrap,
+#vera-app:not(.work-mode) .vera-wm-conversation-wrap {
+  display: contents;
+}
+
+#vera-app:not(.work-mode) .vera-wm-empty-hint {
+  display: none !important;
+}
+
+#vera-app.work-mode .vera-wm-reasoning-body-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+#vera-app.work-mode .vera-wm-reasoning-body-wrap .vera-reasoning-scroll {
+  min-height: 0;
+}
+
+#vera-app.work-mode .vera-wm-conversation-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+#vera-app.work-mode .vera-wm-empty-hint {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  padding: 20px 16px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  color: rgba(200, 215, 235, 0.42);
+  pointer-events: none;
+}
+
+#vera-app.work-mode
+  .vera-wm-reasoning-body-wrap:not(:has(.vera-reasoning-tab-panels .vera-reasoning-md-panel > *))
+  .vera-wm-empty-hint--reasoning,
+#vera-app.work-mode
+  .vera-wm-conversation-wrap:not(:has(#vera-conversation > *))
+  .vera-wm-empty-hint--voice {
+  display: flex;
+}
+
+#vera-app.work-mode .vera-body-grid {
+  position: relative;
+  isolation: isolate;
+}
+
+#vera-app.work-mode .vera-body-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 70% at 50% 8%, rgba(120, 175, 255, 0.08), transparent 55%),
+    radial-gradient(ellipse 85% 55% at 92% 88%, rgba(160, 110, 255, 0.06), transparent 48%);
+  opacity: 0.9;
+  /* Soften the top edge so the strip under the clock does not read as a hard line */
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 100%);
+}
+
+#vera-app.work-mode .vera-body-grid > * {
+  position: relative;
+  z-index: 1;
+}
+
+#vera-app.work-mode .vera-wm-music-pane,
+#vera-app.work-mode .vera-wm-checklist-pane,
+#vera-app.work-mode .vera-wm-center,
+#vera-app.work-mode .vera-wm-right {
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.38);
+  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+#vera-app.work-mode .vera-header-datetime {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(6, 10, 18, 0.62);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
+  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+#vera-app.work-mode .vera-reasoning-send,
+#vera-app.work-mode .vera-reasoning-attach-btn,
+#vera-app.work-mode .vera-reasoning-input {
+  transition:
+    border-color 0.22s ease,
+    background-color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.18s ease,
+    color 0.2s ease;
+}
+
+#vera-app.work-mode .vera-reasoning-send:active {
+  transform: scale(0.98);
+}
+
+#vera-app.work-mode .vera-wm-right #vera-voice-bar {
+  transition:
+    border-color 0.22s ease,
+    background-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+#vera-app.work-mode .vera-wm-checklist-li {
+  transition: background-color 0.18s ease;
+}
+
+#vera-app.work-mode .vera-wm-checklist-li:hover {
+  background-color: rgba(255, 255, 255, 0.045);
 }
