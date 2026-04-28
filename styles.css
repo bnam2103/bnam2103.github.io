@@ -5392,6 +5392,24 @@ body.chat-started .vera-guide {
 .guide-vera .guide-text {
   transform: translate(29px, -25px);
 }
+
+.bmo-vera-hint {
+  position: absolute;
+  top: 6px;
+  left: 128px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.bmo-vera-hint .guide-text {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 12px;
+  line-height: 1.2;
+  max-width: 170px;
+}
 /* =========================
    MOBILE
 ========================= */
