@@ -6526,7 +6526,7 @@ body:not(.bmo-open):not(.app-open)::before {
 }
 
 #home.front-page .fp-acronym-initial {
-  font-size: clamp(4.8rem, 11vw, 10.5rem);
+  font-size: clamp(3.2rem, 7.4vw, 7.2rem);
   font-weight: 800;
   color: #0a4a36;
   width: 0.72em;
@@ -6536,7 +6536,7 @@ body:not(.bmo-open):not(.app-open)::before {
   display: inline-block;
   overflow: hidden;
   white-space: nowrap;
-  font-size: clamp(2.9rem, 7.2vw, 7rem);
+  font-size: clamp(1.9rem, 4.8vw, 4.6rem);
   font-weight: 650;
   color: #2f8c68;
   letter-spacing: 0.02em;
@@ -6553,19 +6553,19 @@ body:not(.bmo-open):not(.app-open)::before {
 
 /* Pull "xecutive" slightly closer to the E glyph */
 #home.front-page .fp-acronym-row:nth-child(2) {
-  margin-left: -1em;
+  margin-left: 0;
 }
 
 #home.front-page .fp-acronym-row:nth-child(2) .fp-acronym-initial {
-  margin-left: 0.14em;
+  margin-left: 0;
 }
 
 #home.front-page .fp-acronym-row:nth-child(2) .fp-acronym-tail {
-  margin-left: -0.18em;
+  margin-left: 0;
 }
 
 #home.front-page .fp-acronym-row:nth-child(3) {
-  margin-left: -0.05em;
+  margin-left: 0;
 }
 
 #home.front-page .fp-acronym-row:nth-child(4) .fp-acronym-tail {
