@@ -41,9 +41,8 @@
       <button class="nav-logo fp-logo" id="nav-home" type="button">VERA</button>
     </div>
     <div class="nav-right">
-      <button class="nav-link fp-nav-link" id="nav-problem-solution">Problem/Solution</button>
-      <button class="nav-link fp-nav-link" id="nav-about-vera">About VERA</button>
-      <button class="nav-link fp-nav-link" id="nav-about-me">About Me</button>
+      <button class="nav-link fp-nav-link" id="nav-problem-solution">Problem</button>
+      <button class="nav-link fp-nav-link" id="nav-about-vera">How it Works</button>
     </div>
   </nav>
 
@@ -656,9 +655,9 @@ const BMO_ASK_ROTATOR_LINES = [
   { text: "\"Hey Vera, can you hear me?\"", isPrompt: true },
   { text: "\"What time is it?\"", isPrompt: true },
   { text: "\"How many days until Christmas?\"", isPrompt: true },
-  { text: "\"What's on the news?\"", isPrompt: true },
-  { text: "\"What's the price of Apple?\"", isPrompt: true },
-  { text: "Bottom right there's a Music button. Sign in to access music via panel and voice commands (example: \"play Feather by Sabrina Carpenter\" or \"lower the volume\").", isPrompt: false },
+  { text: "\"What's on the news today?\"", isPrompt: true },
+  { text: "\"What's Apple's stock price?\"", isPrompt: true },
+  { text: "Sign in with Spotify, then try: \"Play Feather by Sabrina Carpenter\".", isPrompt: false },
   { text: "Press on the headset to mute and deafen VERA.", isPrompt: false },
   { text: "\"Tease me\"", isPrompt: true },
   { text: "While VERA is speaking, interrupt with: \"Can you mute?\"", isPrompt: false }
@@ -686,13 +685,6 @@ startBmoAskRotator();
   function triggerTitleFlash() {
     document.querySelector(".title-text")?.classList.add("flash");
   }
-  const navAboutMe = document.getElementById("nav-about-me");
-  const aboutMeSection = document.getElementById("current-prototype");
-
-  navAboutMe.onclick = () => {
-    scrollSectionCentered(aboutMeSection);
-  };
-
   const revealEls = document.querySelectorAll(".scroll-reveal");
 
   const revealObserver = new IntersectionObserver(
