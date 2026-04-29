@@ -6387,8 +6387,7 @@ body:not(.bmo-open):not(.app-open)::before {
   margin-top: 6px;
 }
 
-#bmo-loading-screen .boot-percent,
-#bmo-loading-screen .boot-note {
+#bmo-loading-screen .boot-percent {
   display: none !important;
 }
 
