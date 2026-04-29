@@ -2456,6 +2456,19 @@ body.chat-started .input-toggle-btn {
 
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
+
+.bmo-ask-rotator {
+  display: none;
+  max-width: min(980px, calc(100vw - 64px));
+  margin: 0 auto 12px;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  color: rgba(24, 61, 46, 0.78);
+  min-height: 2.6em;
+  padding: 0 8px;
+}
 /* hide after first message */
 body.chat-started .startup-text {
   opacity: 0;
@@ -5611,6 +5624,12 @@ body.chat-started .vera-guide {
     font-size: clamp(13px, 4vw, 16px);
     top: calc(50% - 90px);
   }
+  .bmo-ask-rotator {
+    font-size: 0.8rem;
+    max-width: calc(100vw - 28px);
+    margin-bottom: 10px;
+    min-height: 3.1em;
+  }
   .input-container {
     padding: 8px 12px;
   }
@@ -5995,6 +6014,10 @@ body.bmo-open #bmo-page .input-container {
   box-sizing: border-box;
 }
 
+body.bmo-open #bmo-page .bmo-ask-rotator {
+  display: block;
+}
+
 body.bmo-open #bmo-page .bmo-input-dock-row {
   display: flex;
   flex-direction: row;
@@ -6294,13 +6317,24 @@ body:not(.bmo-open):not(.app-open)::before {
   gap: 16px;
 }
 
-#home.front-page .fp-hero-bmo-image {
-  width: min(520px, 95%);
-  max-height: 58vh;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto;
-  filter: drop-shadow(0 14px 24px rgba(15, 90, 66, 0.2));
+#home.front-page .fp-hero-right-copy {
+  margin: 0;
+  max-width: 560px;
+  text-align: center;
+  color: #0f5a42;
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+#home.front-page .fp-hero-right-copy-sub {
+  margin-top: 2px;
+  color: #2c6b53;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  font-weight: 500;
+  line-height: 1.55;
 }
 
 #home.front-page .fp-hero-try-btn {
@@ -6741,9 +6775,10 @@ body:not(.bmo-open):not(.app-open)::before {
     align-items: flex-start;
   }
 
-  #home.front-page .fp-hero-bmo-image {
-    width: min(420px, 100%);
-    max-height: none;
+  #home.front-page .fp-hero-right-copy,
+  #home.front-page .fp-hero-right-copy-sub {
+    text-align: left;
+    max-width: 100%;
   }
 
   #home.front-page .fp-acronym-initial {

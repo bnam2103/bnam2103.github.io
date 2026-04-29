@@ -69,9 +69,14 @@
       </div>
 
       <aside class="fp-hero-right">
-        <img src="bmo_background.png" alt="BMO background preview" class="fp-hero-bmo-image" />
+        <p class="fp-hero-right-copy">
+          A voice-first AI assistant you can interrupt.
+        </p>
+        <p class="fp-hero-right-copy fp-hero-right-copy-sub">
+          Built for hands-free, natural conversations while you work.
+        </p>
         <button id="enter-vera" class="fp-btn fp-btn-primary fp-hero-try-btn" type="button">
-          Try it here
+          Launch Interactive Demo
         </button>
       </aside>
     </div>
@@ -102,38 +107,38 @@
       <div class="vera-use-cases-content">
         <div class="use-cases-layout">
           <div class="use-cases-nav scroll-reveal delay-1">
-            <button class="use-case-btn" data-case="realtime">Natural Speech Flow</button>
-            <button class="use-case-btn" data-case="interrupt">Interruptibility</button>
-            <button class="use-case-btn" data-case="personalization">Personalization</button>
-            <button class="use-case-btn" data-case="actions">System Actions</button>
+            <button class="use-case-btn" data-case="realtime">Voice Pipeline</button>
+            <button class="use-case-btn" data-case="interrupt">Interruptible Dialogue</button>
+            <button class="use-case-btn" data-case="actions">Voice Commands</button>
+            <button class="use-case-btn" data-case="personalization">Input Fallbacks</button>
           </div>
 
           <div class="use-cases-panel use-cases-window scroll-reveal delay-2">
             <div class="use-case-content" id="case-realtime">
-              <h3>Natural Speech Flow</h3>
+              <h3>Voice Pipeline</h3>
               <p>
-                VERA lets users talk naturally and receive spoken responses in real time, similar to a human conversation. In noisy environments or when a microphone is unavailable, users can also type or use Push-to-Talk.
+                VERA uses a speech-to-text → LLM → text-to-speech pipeline to support spoken conversations.
               </p>
             </div>
 
             <div class="use-case-content" id="case-interrupt">
-              <h3>Interruptibility</h3>
+              <h3>Interruptible Dialogue</h3>
               <p>
-                VERA is interruptible only while it is actively speaking. During spoken output, users can cut in to correct, redirect, or add context for a more natural conversational flow.
+                While VERA is speaking, it continues listening for user interruption so the conversation can be corrected or redirected mid-response.
               </p>
             </div>
 
             <div class="use-case-content" id="case-personalization">
-              <h3>Personalization</h3>
+              <h3>Input Fallbacks</h3>
               <p>
-                VERA supports personalization based on user habits and preferences, but personalization is currently disabled in this prototype build.
+                Users can switch between continuous listening, push-to-talk, and keyboard mode depending on the environment.
               </p>
             </div>
 
             <div class="use-case-content" id="case-actions">
-              <h3>System Actions</h3>
+              <h3>Voice Commands</h3>
               <p>
-                VERA supports system actions including date, time, weather, news, and finance queries, with dedicated side panels for rich result views. It also supports music queries with a music panel; music controls require Spotify Premium and Spotify sign-in.
+                VERA can answer utility questions like time, date, weather, countdowns, news, and stock prices through voice. For richer interactions, the prototype currently includes dedicated panels for news and music.
               </p>
             </div>
           </div>
@@ -337,6 +342,7 @@
 
     <div class="input-container">
       <div class="startup-text" id="bmo-startup-text"></div>
+      <div class="bmo-ask-rotator" id="bmo-ask-rotator" aria-live="polite"></div>
       <div class="bmo-input-dock-row">
         <button
           id="bmo-input-toggle"
@@ -639,6 +645,38 @@ heroLabel?.addEventListener("click", async (e) => {
   await unlockAudio();
   startBootSequence();
 });
+
+const bmoAskRotatorEl = document.getElementById("bmo-ask-rotator");
+const BMO_ASK_ROTATOR_LINES = [
+  { text: "\"Hey Vera, can you hear me?\"", isPrompt: true },
+  { text: "\"What time is it?\"", isPrompt: true },
+  { text: "\"How many days until Christmas?\"", isPrompt: true },
+  { text: "\"What's on the news?\"", isPrompt: true },
+  { text: "\"What's the price of Apple?\"", isPrompt: true },
+  { text: "Bottom right there's a Music button. Sign in to access music via panel and voice commands (example: \"play Feather by Sabrina Carpenter\" or \"lower the volume\").", isPrompt: false },
+  { text: "Press on the headset to mute and deafen VERA.", isPrompt: false },
+  { text: "\"Tease me\"", isPrompt: true },
+  { text: "While VERA is speaking, interrupt with: \"Can you mute?\"", isPrompt: false }
+];
+let bmoAskRotatorIndex = 0;
+let bmoAskRotatorTimer = null;
+
+function renderBmoAskRotatorLine() {
+  if (!bmoAskRotatorEl) return;
+  const entry = BMO_ASK_ROTATOR_LINES[bmoAskRotatorIndex];
+  bmoAskRotatorEl.textContent = entry.isPrompt ? `Try asking: ${entry.text}` : entry.text;
+}
+
+function startBmoAskRotator() {
+  if (!bmoAskRotatorEl || bmoAskRotatorTimer) return;
+  renderBmoAskRotatorLine();
+  bmoAskRotatorTimer = setInterval(() => {
+    bmoAskRotatorIndex = (bmoAskRotatorIndex + 1) % BMO_ASK_ROTATOR_LINES.length;
+    renderBmoAskRotatorLine();
+  }, 5000);
+}
+
+startBmoAskRotator();
 
   function triggerTitleFlash() {
     document.querySelector(".title-text")?.classList.add("flash");
