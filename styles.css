@@ -2513,6 +2513,9 @@ body.chat-started .input-container {
 
 .bmo-bottom-left-tools {
   bottom: 18px;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 12px;
 }
 
 .bmo-bottom-right-tools {
@@ -2583,6 +2586,42 @@ body.chat-started .input-container {
 
 .vera-settings-fab:active {
   transform: scale(0.98);
+}
+
+.bmo-mode-guide {
+  pointer-events: auto;
+  width: 340px;
+  max-width: 340px;
+  flex: 0 0 340px;
+  margin-left: 220px;
+  padding: 10px 12px;
+  border: 1px solid rgba(20, 61, 46, 0.28);
+  border-radius: 12px;
+  background: rgba(231, 248, 236, 0.9);
+  box-shadow: 0 8px 22px rgba(11, 46, 34, 0.14);
+  color: rgba(20, 61, 46, 0.92);
+  font-size: 12px;
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(8px);
+  visibility: hidden;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.bmo-mode-guide p {
+  margin: 0 0 8px;
+}
+
+.bmo-mode-guide p:last-child {
+  margin-bottom: 0;
+}
+
+body.bmo-open #bmo-page.bmo-animate-in .bmo-mode-guide {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  /* Wait until input + chat UI finish animating in before showing guidance. */
+  transition-delay: 4.2s;
 }
 
 /* Signed-in user name (POST /api/user/sign-in) */
@@ -5448,6 +5487,10 @@ body.chat-started .vera-guide {
 
   /* Floating Music / productivity — hidden on phone (no room + avoids overlap) */
   .productivity-mode-btn {
+    display: none;
+  }
+
+  .bmo-mode-guide {
     display: none;
   }
 
